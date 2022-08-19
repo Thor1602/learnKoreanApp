@@ -9,12 +9,12 @@
         <div class="mb-3">
             <label for="discussionTopic" class="form-label">Topic</label>
             <input type="text" class="form-control" id="discussionTopic" placeholder="e.g. PostPositions"
-                   name="discussionTopic">
+                   name="discussionTopic" required>
         </div>
         <div class="mb-3">
             <label for="discussionQuestion" class="form-label">Question</label>
             <textarea class="form-control" id="discussionQuestion" rows="3"
-                      placeholder="e.g. describe the differences between 예 and 에서" name="discussionQuestion"></textarea>
+                      placeholder="e.g. describe the differences between 예 and 에서" name="discussionQuestion" required></textarea>
         </div>
         <button class="btn btn-primary btn-login" type="submit" name="discussion651554661">SAVE</button>
     </form>
@@ -25,7 +25,7 @@
         <div class="mb-3">
             <label for="quizName" class="form-label">Topic</label>
             <input type="text" class="form-control" id="quizName" placeholder="e.g. PostPositions"
-                   name="quizName">
+                   name="quizName" required>
         </div>
         <button class="btn btn-primary btn-login" type="submit" name="quizname564151154">SAVE</button>
     </form>
@@ -35,7 +35,7 @@
     <form action="/admin" method="post">
         <div class="mb-3">
             <label for="quizNameChoice" class="form-label">Quiz name</label>
-            <select class="form-select" id="quizNameChoice" name="quizNameChoice" aria-label="Default select example">
+            <select class="form-select" id="quizNameChoice" name="quizNameChoice" aria-label="Default select example" required>
                 <option selected>Choose Quiz</option>
                 {% for id, quiz_subject in quiz_subjects %}
                     <option value="{{ id }}">{{ quiz_subject }}</option>
@@ -44,15 +44,15 @@
         </div>
         <div class="mb-3">
             <label for="question" class="form-label">Question</label>
-            <input type="text" class="form-control" id="question" name="question">
+            <input type="text" class="form-control" id="question" name="question" required>
         </div>
         <div class="mb-3">
             <label for="answerone" class="form-label">Answer one</label>
-            <input type="text" class="form-control" id="answerone" name="answerone">
+            <input type="text" class="form-control" id="answerone" name="answerone" required>
         </div>
         <div class="mb-3">
             <label for="answertwo" class="form-label">Answer two</label>
-            <input type="text" class="form-control" id="answertwo" name="answertwo">
+            <input type="text" class="form-control" id="answertwo" name="answertwo" required>
         </div>
         <div class="mb-3">
             <label for="answerthree" class="form-label">Answer three</label>
@@ -64,7 +64,7 @@
         </div>
         <div class="mb-3">
             <label for="correctanswer" class="form-label">Correct answer</label>
-            <input type="text" class="form-control" id="correctanswer" name="correctanswer">
+            <input type="text" class="form-control" id="correctanswer" name="correctanswer" required>
         </div>
         <button class="btn btn-primary btn-login" type="submit" name="question551531822">SAVE</button>
     </form><hr>
@@ -75,7 +75,7 @@
         <div class="mb-3">
             <label for="quizNameChoiceThree" class="form-label">Quiz group</label>
             <select class="form-select" id="quizNameChoiceThree" name="quizNameChoiceThree"
-                    aria-label="Default select example">
+                    aria-label="Default select example" required>
                 <option selected>Choose Quiz</option>
                 {% for id, quiz_subject in quiz_subjects %}
                     <option value="{{ id }}" >{{ quiz_subject }}</option>
@@ -85,7 +85,7 @@
         <div class="mb-3">
             <label for="translation" class="form-label">Korean, English</label>
             <textarea class="form-control" id="translation" rows="3"
-                      placeholder="e.g. 문, door" name="translationlist"></textarea>
+                      placeholder="e.g. 문, door" name="translationlist" required></textarea>
             <button class="btn btn-primary btn-login" type="submit" name="translation156151556">SAVE</button>
         </div>
     </form>
@@ -97,7 +97,7 @@
         <div class="mb-3">
             <label for="quizNameChoiceTwo" class="form-label">Quiz group</label>
             <select class="form-select" id="quizNameChoiceTwo" name="quizNameChoiceTwo"
-                    aria-label="Default select example">
+                    aria-label="Default select example" required>
                 <option selected>Choose Quiz</option>
                 {% for id, quiz_subject in quiz_subjects %}
                     <option value="{{ id }}">{{ quiz_subject }}</option>
@@ -106,11 +106,11 @@
         </div>
         <div class="mb-3">
             <label for="Korean" class="form-label">Korean</label>
-            <input type="text" class="form-control" id="Korean" name="Korean">
+            <input type="text" class="form-control" id="Korean" name="Korean" required>
         </div>
         <div class="mb-3">
             <label for="English" class="form-label">English </label>
-            <input type="text" class="form-control" id="English" name="English">
+            <input type="text" class="form-control" id="English" name="English" required>
         </div>
         <button class="btn btn-primary btn-login" type="submit" name="translation465198155">SAVE</button>
     </form>

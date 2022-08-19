@@ -89,7 +89,7 @@ class Main:
         self.execute_query(query_list=F"UPDATE users SET last_login = NOW() where id = {id}", commit=True)
 
     def get_quiz_subjects(self):
-        return [(x[0], x[1]) for x in self.read_database('quiz')]
+        return [(x[0], x[1]) for x in self.read_table('quiz')]
 
 
 class User(Main):
