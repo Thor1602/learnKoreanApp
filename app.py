@@ -25,7 +25,27 @@ def index():
         return render_template('index.html')
 
 
-@app.route('/admin', methods=['GET', 'POST'])
+@app.route('/admin_overview', methods=['GET', 'POST'])
+def admin_overview():
+    if not session.get('logged_in_admin'):
+        flash('admin login credentials are required')
+        return redirect(url_for('login'))
+    else:
+        main = Database.Main()
+        translation_data = main.read_table('translationkoreng')
+        discussion_data = main.read_table('discussion')
+        post_data = main.read_table('post')
+        reply_data = main.read_table('reply')
+        subreply_data = main.read_table('subreply')
+        question_data = main.read_table('question')
+        quiz_data = main.read_table('quiz')
+
+        return render_template('admin_overview.html', translation_data=translation_data,
+                               discussion_data=discussion_data, post_data=post_data, question_data=question_data,
+                               quiz_data=quiz_data, reply_data=reply_data, subreply_data=subreply_data)
+
+
+@app.route('/admin_register', methods=['GET', 'POST'])
 def admin():
     if not session.get('logged_in_admin'):
         flash('admin login credentials are required')
@@ -36,7 +56,9 @@ def admin():
             for key in request.form:
                 if key == 'discussion651554661':
                     discussion = Database.Discussion(request.form['discussionTopic'],
-                                                     request.form['discussionQuestion'], main.get_user_id(session['current_user']))
+                                                     request.form['discussionQuestion'],
+                                                     main.get_user_id(session['current_user']))
+                    discussion.register_discussion()
                 if key == "quizname564151154":
                     quiz = Database.Quiz(request.form['quizName'])
                     quiz.register_quiz()
@@ -45,9 +67,10 @@ def admin():
                                                  request.form['answerone'], request.form['answertwo'],
                                                  request.form['answerthree'], request.form['answerfour'],
                                                  request.form['correctanswer'])
-
+                    question.register_question()
                 if key == 'translation465198155':
-                    one_on_one_translation = Database.TranslationKorEng(request.form['quizNameChoiceTwo'], request.form['Korean'], request.form['English'])
+                    one_on_one_translation = Database.TranslationKorEng(request.form['quizNameChoiceTwo'],
+                                                                        request.form['Korean'], request.form['English'])
                     one_on_one_translation.register_translation()
                 if key == "translation156151556":
                     list_translation = request.form['translationlist']

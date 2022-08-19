@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Admin Overview{% endblock %}
+{% block title_description %}Only for admins (not you mr(s). Hacker){% endblock %}
+{% block content %}
+<h2>read the books</h2>
+
+<!--translation_data = main.read_table('translationkoreng')-->
+<!--        discussion_data = main.read_table('discussion')-->
+<!--        post_data = main.read_table('post')-->
+<!--        reply_data = main.read_table('reply')-->
+<!--        subreply_data = main.read_table('subreply')-->
+<!--        question_data = main.read_table('question')-->
+<!--        quiz_data = main.read_table('quiz')-->
+
+{% for query in translation_data %}
+<p>{{ query }}</p>
+{% endfor %}
+{% for query in discussion_data %}
+<p>{{ query }}</p>
+{% endfor %}
+{% for query in post_data %}
+<p>{{ query }}</p>
+{% endfor %}
+{% for query in reply_data %}
+<p>{{ query }}</p>
+{% endfor %}
+{% for query in subreply_data %}
+<p>{{ query }}</p>
+{% endfor %}
+{% for query in question_data %}
+<p>{{ query }}</p>
+{% endfor %}
+{% for query in quiz_data %}
+<p>{{ query }}</p>
+{% endfor %}
+{% endblock %}

@@ -13,9 +13,8 @@ class Main:
 
     def execute_query(self, query_list, commit=False, fetchAll=False, fetchOne=False):
         try:
-            conn = psycopg2.connect(
-                'postgres://zceypefuehiilo:2ea88a6ea19cec2f8fbdb355d1527075f5049e1c2bb810ede6674cf533342169@ec2-34-241-90-235.eu-west-1.compute.amazonaws.com:5432/d2f0mdlrdlibbq',
-                sslmode='require')
+            credentials = str(open("database_credentials.txt", 'r').read())
+            conn = psycopg2.connect(credentials, sslmode='require')
             c = conn.cursor()
             result = None
             if type(query_list) == str:
@@ -41,8 +40,8 @@ class Main:
         except Error as e:
             print(e)
 
-    def read_database(self, db_name):
-        return self.execute_query(query_list=f"SELECT * FROM {db_name}", fetchAll=True)
+    def read_table(self, table_name):
+        return self.execute_query(query_list=f"SELECT * FROM {table_name}", fetchAll=True)
 
     def read_columns(self, db_name):
         return self.execute_query(
@@ -129,7 +128,6 @@ class Quiz(Main):
             query_list=f"INSERT INTO quiz (name) VALUES ('{self.name}')", commit=True)
 
 
-
 class Question(Main):
     def __init__(self, quizID, question, answer_one, answer_two, answer_three, answer_four, correct_answer, image_id=0):
         self.quizID = quizID
@@ -143,8 +141,9 @@ class Question(Main):
 
     def register_question(self):
         self.execute_query(
-            query_list=f"INSERT INTO question (quizID, question, answer_one, answer_two, answer_three, answer_four, correct_answer, image_id) VALUES ({self.first_name}, {self.last_name}, {self.nickname}, {self.password}, {self.role_name}, {self.email}, NOW(), NOW());",
+            query_list=f"INSERT INTO question (quizID, question, answer_one, answer_two, answer_three, answer_four, correct_answer, image_id) VALUES ({self.quizID}, {self.question}, {self.answer_one}, {self.answer_two}, {self.answer_three}, {self.answer_four}, {self.correct_answer}, {self.image_id});",
             commit=True)
+
 
 class TranslationKorEng(Main):
     def __init__(self, quizID, Korean, English, image_id=0):
@@ -153,10 +152,12 @@ class TranslationKorEng(Main):
         self.quizID = quizID
         self.image_id = image_id
 
-
     def register_translation(self):
         self.execute_query(
-            query_list=f"INSERT INTO translationkoreng (korean, english, quizid, image_id) VALUES ('{self.Korean}', '{self.English}', '{self.quizID}', {self.image_id})", commit=True)
+            query_list=f"INSERT INTO translationkoreng (korean, english, quizid, image_id) VALUES ('{self.Korean}', '{self.English}', '{self.quizID}', {self.image_id})",
+            commit=True)
+
+
 class Grades(Main):
     def __init__(self, courseID, QuizID, userID, grade, date):
         self.courseID = courseID
@@ -173,12 +174,22 @@ class Discussion(Main):
         self.userID = userID
         self.image_id = image_id
 
+    def register_discussion(self):
+        self.execute_query(
+            query_list=f"INSERT INTO discussion (topic, date, userid, image_id, question) VALUES ('{self.topic}, NOW(), {self.userID}, {self.image_id}, {self.question} ')",
+            commit=True)
+
 
 class Post(Main):
     def __init__(self, post, discussionID, userID):
         self.post = post
         self.discussionID = discussionID
         self.userID = userID
+
+    def register_post(self):
+        self.execute_query(
+            query_list=f"INSERT INTO post (post, date, discussionid, userid) VALUES ('{self.post}, NOW(), {self.discussionID}, {self.userID}')",
+            commit=True)
 
 
 class Reply(Main):
@@ -187,9 +198,19 @@ class Reply(Main):
         self.postID = postID
         self.userID = userID
 
+    def register_reply(self):
+        self.execute_query(
+            query_list=f"INSERT INTO reply (reply, date, postid, userid) VALUES ('{self.reply}, NOW(), {self.postID}, {self.userID}')",
+            commit=True)
+
 
 class SubReply(Main):
     def __init__(self, subreply, replyID, userID):
-        self.reply = subreply
+        self.subreply = subreply
         self.replyID = replyID
         self.userID = userID
+
+    def register_subreply(self):
+        self.execute_query(
+            query_list=f"INSERT INTO subreply (subreply, date, replyid, userid) VALUES ('{self.subreply}, NOW(), {self.replyID}, {self.userID}')",
+            commit=True)
