@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>Learn Korean</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="/static/images/favicon/favicon.ico">
+    <link href="static/main.css" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" rel="stylesheet">
+
+
+    {% block head %}
+
+    {% endblock %}
+</head>
+<body id="body-pd" data-spy="scroll" data-target=".navbar" data-offset="60">
+<header class="header" id="header">
+    <div class="header_toggle"><i class='bx bx-menu' id="header-toggle"></i></div>
+    <div class="header_img"><img src="https://i.imgur.com/hczKIze.jpg" alt=""></div>
+</header>
+<div class="l-navbar" id="nav-bar">
+    <nav class="nav">
+        <div><a href="#" class="nav_logo"> <i class='fa-solid fa-earth-asia fa-lg'></i> <span class="nav_logo-name">Learn Korean</span>
+        </a>
+            <div class="nav_list">
+                <a href="/" class="nav_link"> <i class='fa-solid fa-border-all fa-lg'></i> <span class="nav_name">Dashboard</span>
+                </a>
+                <a href="/discussion" class="nav_link"> <i class='fa-solid fa-d fa-lg'></i> <span class="nav_name">Discussion</span>
+                </a>
+                <a href="/quizmenu" class="nav_link"> <i class='fa-solid fa-circle-question fa-lg'></i> <span
+                        class="nav_name">Quizzes</span> </a>
+                <a href="/mypage" class="nav_link"> <i class='fa-solid fa-address-card fa-lg'></i> <span
+                        class="nav_name">My page</span> </a>
+            </div>
+        </div>
+        <a href="/logout" class="nav_link"> <i class='bx bx-log-out nav_icon'></i> <span
+                class="nav_name">Sign Out</span> </a>
+    </nav>
+</div>
+<!--Container Main start-->
+<div class="bg-light">
+    <div class="container title text-center">
+        <h1>{% block title %}{% endblock %}</h1>
+        <p>{% block title_description %}{% endblock %}</p>
+    </div>
+    <div class="container content-body text-center">
+        {% block content %}{% endblock %}
+    </div>
+    <div class="footer bg-blue text-center">
+        <a href="#body-pd" title="To Top">
+            <span><i class="fa fa-angle-up fa-3x" aria-hidden="true"></i></span>
+        </a>
+        {% block footer %}
+        {% endblock %}
+        <p>Copyright TD</p>
+    </div>
+    <div class="clear"></div>
+</div>
+
+
+<!--Container Main end-->
+
+
+<script src="static/index.js"></script>
+<script src="static/sidebar.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://kit.fontawesome.com/4908bed01e.js" crossorigin="anonymous"></script>
+{% block tail %}
+{% endblock %}
+</body>
+</html>
