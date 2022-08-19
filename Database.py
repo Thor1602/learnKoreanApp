@@ -54,7 +54,6 @@ class Main:
         self.execute_query(f"ALTER TABLE {table_name} ADD {new_column_name} {column_definition};", commit=True)
 
     def verify_password(self, email, pwd):
-        # "23FvMIs*5cx8fHRv"
         retrieved_password = \
             self.execute_query(query_list=f"SELECT password FROM users where email = '{email}'", fetchAll=True)[0][0]
         return check_password_hash(retrieved_password, pwd)
@@ -91,6 +90,15 @@ class Main:
     def get_quiz_subjects(self):
         return [(x[0], x[1]) for x in self.read_table('quiz')]
 
+
+    def alter_password(self, email, old_pwd, new_pwd):
+        # "23FvMIs*5cx8fHRv"
+        new_pwd = generate_password_hash(new_pwd)
+        if self.verify_password(email, old_pwd):
+            self.execute_query(query_list=f"UPDATE users SET password = '{new_pwd}' where email = '{email}'", commit=True)
+            return True
+        else:
+            return False
 
 class User(Main):
     def __init__(self, nickname, password, role, first_name, last_name, email, last_login):
