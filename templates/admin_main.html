@@ -45,6 +45,29 @@
 <!--Container Main start-->
 <div class="bg-light">
     <div class="container title text-center">
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                MENU
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li><a class="dropdown-item" href="/admin_register">Register</a></li>
+                <li><a class="dropdown-item" href="/admin_overview">Overview</a></li>
+                <hr>
+                <li><a class="dropdown-item" href="#">Quiz Topic</a></li>
+                <li><a class="dropdown-item" href="#">Translations</a></li>
+                <li><a class="dropdown-item" href="#">Questions</a></li>
+                <hr>
+                <li><a class="dropdown-item" href="#">Discussions</a></li>
+                <li><a class="dropdown-item" href="#">Posts</a></li>
+                <li><a class="dropdown-item" href="#">Replies</a></li>
+                <li><a class="dropdown-item" href="#">Subreplies</a></li>
+                <hr>
+                <li><a class="dropdown-item" href="#">Admin Settings</a></li>
+                <li><a class="dropdown-item" href="#">Users</a></li>
+
+            </ul>
+        </div>
         <h1>{% block title %}{% endblock %}</h1>
         <p>{% block title_description %}{% endblock %}</p>
     </div>
