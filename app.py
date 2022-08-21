@@ -39,14 +39,23 @@ def admin_overview():
         subreply_data = main.read_table('subreply')
         question_data = main.read_table('question')
         quiz_data = main.read_table('quiz')
+        translation_columns = main.read_columns('translationkoreng')
+        discussion_columns = main.read_columns('discussion')
+        post_columns = main.read_columns('post')
+        reply_columns = main.read_columns('reply')
+        subreply_columns = main.read_columns('subreply')
+        question_columns = main.read_columns('question')
+        quiz_columns = main.read_columns('quiz')
 
         return render_template('admin_overview.html', translation_data=translation_data,
                                discussion_data=discussion_data, post_data=post_data, question_data=question_data,
-                               quiz_data=quiz_data, reply_data=reply_data, subreply_data=subreply_data)
+                               quiz_data=quiz_data, reply_data=reply_data, subreply_data=subreply_data, translation_columns=translation_columns,
+                               discussion_columns=discussion_columns, post_columns=post_columns, question_columns=question_columns,
+                               quiz_columns=quiz_columns, reply_columns=reply_columns, subreply_columns=subreply_columns)
 
 
 @app.route('/admin_register', methods=['GET', 'POST'])
-def admin():
+def admin_register():
     if not session.get('logged_in_admin'):
         flash('admin login credentials are required')
         return redirect(url_for('login'))
@@ -55,9 +64,9 @@ def admin():
         if request.method == "POST":
             for key in request.form:
                 if key == 'discussion651554661':
-                    discussion = Database.Discussion(request.form['discussionTopic'],
-                                                     request.form['discussionQuestion'],
-                                                     main.get_user_id(session['current_user']))
+                    discussion = Database.Discussion(topic=request.form['discussionTopic'],
+                                                     question=request.form['discussionQuestion'],
+                                                     userID=main.get_user_id(session['current_user']))
                     discussion.register_discussion()
                 if key == "quizname564151154":
                     quiz = Database.Quiz(request.form['quizName'])
@@ -80,7 +89,7 @@ def admin():
                         translation = Database.TranslationKorEng(request.form['quizNameChoiceThree'], x[0], x[1])
                         translation.register_translation()
 
-            return redirect(url_for('admin'))
+            return redirect(url_for('admin_register'))
         quiz_subjects = main.get_quiz_subjects()
         return render_template('admin.html', quiz_subjects=quiz_subjects)
 
@@ -152,6 +161,26 @@ def logout():
     session['logged_in'] = False
     session['logged_in_admin'] = False
     return redirect(url_for('login'))
+
+@app.route('/admin_overview_js', methods=['GET', 'POST'])
+def admin_overview_js ():
+    if not session.get('logged_in_admin'):
+        flash('admin login credentials are required')
+        return redirect(url_for('login'))
+    else:
+        main = Database.Main()
+        translation_data = main.read_table('translationkoreng')
+        discussion_data = main.read_table('discussion')
+        post_data = main.read_table('post')
+        reply_data = main.read_table('reply')
+        subreply_data = main.read_table('subreply')
+        question_data = main.read_table('question')
+        quiz_data = main.read_table('quiz')
+
+        return render_template('admin_overview.js', translation_data=translation_data,
+                               discussion_data=discussion_data, post_data=post_data, question_data=question_data,
+                               quiz_data=quiz_data, reply_data=reply_data, subreply_data=subreply_data)
+
 
 
 @app.errorhandler(400)

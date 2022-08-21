@@ -5,7 +5,7 @@
     <hr>
 
     <h2>Discussion</h2>
-    <form action="/admin" method="post">
+    <form action="/admin_register" method="post">
         <div class="mb-3">
             <label for="discussionTopic" class="form-label">Topic</label>
             <input type="text" class="form-control" id="discussionTopic" placeholder="e.g. PostPositions"
@@ -13,26 +13,28 @@
         </div>
         <div class="mb-3">
             <label for="discussionQuestion" class="form-label">Question</label>
-            <textarea class="form-control" id="discussionQuestion" rows="3"
-                      placeholder="e.g. describe the differences between 예 and 에서" name="discussionQuestion" required></textarea>
+            <textarea class="form-control rich-text-editor" id="discussionQuestion" rows="3"
+                      placeholder="e.g. describe the differences between 예 and 에서" name="discussionQuestion"></textarea>
         </div>
+        <div></div>
         <button class="btn btn-primary btn-login" type="submit" name="discussion651554661">SAVE</button>
     </form>
 <hr>
 
     <h2>Defining New Quiz Subject</h2>
-    <form action="/admin" method="post">
+    <form action="/admin_register" method="post">
         <div class="mb-3">
             <label for="quizName" class="form-label">Topic</label>
             <input type="text" class="form-control" id="quizName" placeholder="e.g. PostPositions"
                    name="quizName" required>
         </div>
+        <hr>
         <button class="btn btn-primary btn-login" type="submit" name="quizname564151154">SAVE</button>
     </form>
 <hr>
     <h2>Defining New Quiz Questions</h2>
 
-    <form action="/admin" method="post">
+    <form action="/admin_register" method="post">
         <div class="mb-3">
             <label for="quizNameChoice" class="form-label">Quiz name</label>
             <select class="form-select" id="quizNameChoice" name="quizNameChoice" aria-label="Default select example" required>
@@ -71,7 +73,7 @@
 
     <h2>List Translation</h2>
 
-    <form action="/admin" method="post">
+    <form action="/admin_register" method="post">
         <div class="mb-3">
             <label for="quizNameChoiceThree" class="form-label">Quiz group</label>
             <select class="form-select" id="quizNameChoiceThree" name="quizNameChoiceThree"
@@ -93,7 +95,7 @@
 
     <h2>One Translation</h2>
 
-    <form action="/admin" method="post">
+    <form action="/admin_register" method="post">
         <div class="mb-3">
             <label for="quizNameChoiceTwo" class="form-label">Quiz group</label>
             <select class="form-select" id="quizNameChoiceTwo" name="quizNameChoiceTwo"

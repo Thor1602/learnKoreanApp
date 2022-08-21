@@ -12,6 +12,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js"
             integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT"
             crossorigin="anonymous"></script>
+    <script src="https://cdn.tiny.cloud/1/e52lsm9v4b8tgxosu2ds8c83hb3tf3bjd8u44zoypolktlk7/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 
 
     {% block head %}
@@ -20,7 +21,7 @@
 </head>
 <body id="body-pd" data-spy="scroll" data-target=".navbar" data-offset="60">
 <header class="header" id="header">
-    <div class="header_toggle"><i class='bx bx-menu' id="header-toggle"></i></div>
+    <div class="header_toggle"><i class="bx bx-menu fa-solid fa-bars" id="header-toggle"></i></div>
     <div class="header_img"><img src="https://i.imgur.com/hczKIze.jpg" alt=""></div>
 </header>
 <div class="l-navbar" id="nav-bar">
@@ -68,6 +69,7 @@
 
 <script src="static/index.js"></script>
 <script src="static/sidebar.js"></script>
+<script src="static/rich_text_editor.js"></script>
 <script src="https://kit.fontawesome.com/4908bed01e.js" crossorigin="anonymous"></script>
 {% block tail %}
 {% endblock %}

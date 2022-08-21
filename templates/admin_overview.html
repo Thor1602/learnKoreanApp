@@ -1,27 +1,524 @@
 {% extends "admin_main.html" %}
 {% block title %}Admin Overview{% endblock %}
 {% block title_description %}Only for admins (not you mr(s). Hacker){% endblock %}
+{% block dropdown %}
+<hr>
+<li class="dropdown-item">
+    <button class="btn" type="button" id="dropdown_quiz">Quiz Topic</button>
+</li>
+<li class="dropdown-item">
+    <button class="btn" type="button" id="dropdown_translation">Translations</button>
+</li>
+<li class="dropdown-item">
+    <button class="btn" type="button" id="dropdown_question">Questions</button>
+</li>
+<hr>
+<li class="dropdown-item">
+    <button class="btn" type="button" id="dropdown_discussion">Discussions</button>
+</li>
+<li class="dropdown-item">
+    <button class="btn" type="button" id="dropdown_post">Posts</button>
+</li>
+<li class="dropdown-item">
+    <button class="btn" type="button" id="dropdown_reply">Replies</button>
+</li>
+<li class="dropdown-item">
+    <button class="btn" type="button" id="dropdown_subreply">Subreplies</button>
+</li>
+<li class="dropdown-item">
+    <button class="btn" type="button" id="dropdown_users">Users</button>
+</li>
+{% endblock %}
 {% block content %}
-<h2>read the books</h2>
-{% for query in translation_data %}
-<p>{{ query }}</p>
-{% endfor %}
-{% for query in discussion_data %}
-<p>{{ query }}</p>
-{% endfor %}
-{% for query in post_data %}
-<p>{{ query }}</p>
-{% endfor %}
-{% for query in reply_data %}
-<p>{{ query }}</p>
-{% endfor %}
-{% for query in subreply_data %}
-<p>{{ query }}</p>
-{% endfor %}
-{% for query in question_data %}
-<p>{{ query }}</p>
-{% endfor %}
-{% for query in quiz_data %}
-<p>{{ query }}</p>
-{% endfor %}
+
+<table class="table table-warning table-striped  table-hover w-auto small" id="translation_table">
+    <thead>
+    <tr>
+        <th scope="col" colspan="7">TRANSLATIONS</th>
+    </tr>
+    <tr>
+        {% for query in translation_columns %}
+        <th class="text-uppercase" scope="col">{{ query[0] }}</th>
+        {% endfor %}
+        <th scope="col">EDIT</th>
+        <th scope="col">DELETE</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    {% for query in translation_data %}
+    <tr>
+        {% for element in query %}
+        <th>{{ element }}</th>
+        {% endfor %}
+        <th>
+            <button class="btn btn-success" id="translation_edit_{{ query[0] }}"><i
+                    class="fa-solid fa-pen-to-square"></i></button>
+        </th>
+        <th>
+            <button class="btn btn-danger" id="translation_delete_{{ query[0] }}"><i class="fa-solid fa-trash"></i>
+            </button>
+        </th>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<table class="table table-warning table-striped  table-hover w-auto small" id="quiz_topic_table">
+    <thead>
+    <tr>
+        <th scope="col" colspan="4">QUIZ TOPICS</th>
+    </tr>
+
+    <tr>
+        {% for query in quiz_columns %}
+        <th class="text-uppercase" scope="col">{{ query[0] }}</th>
+        {% endfor %}
+        <th scope="col">EDIT</th>
+        <th scope="col">DELETE</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    {% for query in quiz_data %}
+    <tr>
+        {% for element in query %}
+        <th>{{ element }}</th>
+        {% endfor %}
+        <th>
+            <button class="btn btn-success" id="quiz_edit_{{ query[0] }}"><i class="fa-solid fa-pen-to-square"></i>
+            </button>
+        </th>
+        <th>
+            <button class="btn btn-danger" id="quiz_delete_{{ query[0] }}"><i class="fa-solid fa-trash"></i></button>
+        </th>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<table class="table table-warning table-striped  table-hover w-auto small" id="question_table">
+    <thead>
+    <tr>
+        <th scope="col" colspan="11">QUESTIONS</th>
+    </tr>
+
+    <tr>
+        {% for query in question_columns %}
+        {% if query[0][:7] == "answer_" %}
+        <th class="text-uppercase" scope="col">{{ query[0][7:] }}</th>
+        {% elif query[0][7:] == "_answer" %}
+        <th class="text-uppercase" scope="col">{{ query[0][:7] }}</th>
+        {% else %}
+        <th class="text-uppercase" scope="col">{{ query[0] }}</th>
+        {% endif %}
+        {% endfor %}
+        <th scope="col">EDIT</th>
+        <th scope="col">DELETE</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for query in question_data %}
+    <tr>
+        {% for element in query %}
+        <th>{{ element }}</th>
+        {% endfor %}
+        <th>
+            <button class="btn btn-success" id="question_edit_{{ query[0] }}"><i class="fa-solid fa-pen-to-square"></i>
+            </button>
+        </th>
+        <th>
+            <button class="btn btn-danger" id="question_delete_{{ query[0] }}"><i class="fa-solid fa-trash"></i>
+            </button>
+        </th>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<table class="table table-warning table-striped  table-hover w-auto small" id="discussion_table">
+    <thead>
+    <tr>
+        <th scope="col" colspan="8">DISCUSSIONS</th>
+    </tr>
+
+    <tr>
+        {% for query in discussion_columns %}
+        <th class="text-uppercase" scope="col">{{ query[0] }}</th>
+        {% endfor %}
+        <th scope="col">EDIT</th>
+        <th scope="col">DELETE</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    {% for query in discussion_data %}
+    <tr>
+        {% for element in query %}
+        <th>{{ element }}</th>
+        {% endfor %}
+        <th>
+            <button class="btn btn-success" id="discussion_edit_{{ query[0] }}"><i
+                    class="fa-solid fa-pen-to-square"></i></button>
+        </th>
+        <th>
+            <button class="btn btn-danger" id="discussion_delete_{{ query[0] }}"><i class="fa-solid fa-trash"></i>
+            </button>
+        </th>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<table class="table table-warning table-striped  table-hover w-auto small" id="post_table">
+    <thead>
+    <tr>
+        <th scope="col" colspan="7">POSTS</th>
+    </tr>
+
+    <tr>
+        {% for query in post_columns %}
+        <th class="text-uppercase" scope="col">{{ query[0] }}</th>
+        {% endfor %}
+        <th scope="col">EDIT</th>
+        <th scope="col">DELETE</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    {% for query in post_data %}
+    <tr>
+        {% for element in query %}
+        <th>{{ element }}</th>
+        {% endfor %}
+        <th>
+            <button class="btn btn-success" id="post_edit_{{ query[0] }}"><i class="fa-solid fa-pen-to-square"></i>
+            </button>
+        </th>
+        <th>
+            <button class="btn btn-danger" id="post_delete_{{ query[0] }}"><i class="fa-solid fa-trash"></i></button>
+        </th>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<table class="table table-warning table-striped  table-hover w-auto small" id="reply_table">
+    <thead>
+    <tr>
+        <th scope="col" colspan="7">REPLIES</th>
+    </tr>
+
+    <tr>
+        {% for query in reply_columns %}
+        <th class="text-uppercase" scope="col">{{ query[0] }}</th>
+        {% endfor %}
+        <th scope="col">EDIT</th>
+        <th scope="col">DELETE</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    {% for query in reply_data %}
+    <tr>
+        {% for element in query %}
+        <th>{{ element }}</th>
+        {% endfor %}
+        <th>
+            <button class="btn btn-success" id="reply_edit_{{ query[0] }}"><i class="fa-solid fa-pen-to-square"></i>
+            </button>
+        </th>
+        <th>
+            <button class="btn btn-danger" id="reply_delete_{{ query[0] }}"><i class="fa-solid fa-trash"></i></button>
+        </th>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<table class="table table-warning table-striped  table-hover w-auto small" id="subreply_table">
+    <thead>
+    <tr>
+        <th scope="col" colspan="7">SUBREPLIES</th>
+    </tr>
+
+    <tr>
+        {% for query in subreply_columns %}
+        <th class="text-uppercase" scope="col">{{ query[0] }}</th>
+        {% endfor %}
+        <th scope="col">EDIT</th>
+        <th scope="col">DELETE</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    {% for query in subreply_data %}
+    <tr>
+        {% for element in query %}
+        <th>{{ element }}</th>
+        {% endfor %}
+        <th>
+            <button class="btn btn-success" id="subreply_edit_{{ query[0] }}"><i class="fa-solid fa-pen-to-square"></i>
+            </button>
+        </th>
+        <th>
+            <button class="btn btn-danger" id="subreply_delete_{{ query[0] }}"><i class="fa-solid fa-trash"></i>
+            </button>
+        </th>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+
+<div class="modal fade" id="adminOverviewModalTranslation" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabelTranslation">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/admin_overview" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="input-modal-translation-korean" class="form-label" id="label-modal-korean"></label>
+                        <input type="text" class="form-control" id="input-modal-translation-korean" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="input-modal-translation-english" class="form-label" id="label-modal-english"></label>
+                        <input type="text" class="form-control" id="input-modal-translation-english" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="input-modal-translation-quizid" class="form-label" id="label-modal-quizid"></label>
+                        <input type="text" class="form-control" id="input-modal-translation-quizid" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="input-modal-translation-imageid" class="form-label" id="label-modal-imageid"></label>
+                        <input type="text" class="form-control" id="input-modal-translation-imageid" required>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="adminOverviewModalQuizTopic" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabelQuizTopic">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/admin_overview" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="input-modal-quizTopic" class="form-label" id="label-modal-quizTopic"></label>
+                        <input type="text" class="form-control" id="input-modal-quizTopic" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="adminOverviewModalQuestion" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabelQuestion">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/admin_overview" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="input-modal-question-quizid" class="form-label" id="label-modal-question-quizid"></label>
+                        <input type="text" class="form-control" id="input-modal-question-quizid" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="input-modal-question-question" class="form-label" id="label-modal-question-question"></label>
+                        <input type="text" class="form-control" id="input-modal-question-question" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="input-modal-question-one" class="form-label" id="label-modal-question-one"></label>
+                        <input type="text" class="form-control" id="input-modal-question-one" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="input-modal-question-two" class="form-label" id="label-modal-question-two"></label>
+                        <input type="text" class="form-control" id="input-modal-question-two" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="input-modal-question-three" class="form-label" id="label-modal-question-three"></label>
+                        <input type="text" class="form-control" id="input-modal-question-three" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="input-modal-question-four" class="form-label" id="label-modal-question-four"></label>
+                        <input type="text" class="form-control" id="input-modal-question-four" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="input-modal-question-correct" class="form-label" id="label-modal-question-correct"></label>
+                        <input type="text" class="form-control" id="input-modal-question-correct" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="input-modal-question-imageid" class="form-label" id="label-modal-question-imageid"></label>
+                        <input type="text" class="form-control" id="input-modal-question-imageid" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="adminOverviewModalDiscussion" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabelDiscussion">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/admin_overview" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="input-modal-discussion-topic" class="form-label" id="label-modal-discussion-topic"></label>
+                        <input type="text" class="form-control" id="input-modal-discussion-topic" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="input-modal-discussion-date" class="form-label" id="label-modal-discussion-date"></label>
+                        <input type="text" class="form-control" id="input-modal-discussion-date" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="input-modal-discussion-userid" class="form-label" id="label-modal-discussion-userid"></label>
+                        <input type="text" class="form-control" id="input-modal-discussion-userid" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="input-modal-discussion-image_id" class="form-label" id="label-modal-discussion-image_id"></label>
+                        <input type="text" class="form-control" id="input-modal-discussion-image_id" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="input-modal-discussion-question" class="form-label" id="label-modal-discussion-question"></label>
+                        <input type="text" class="form-control" id="input-modal-discussion-question" required>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="adminOverviewModalPost" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabelPost">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/admin_overview" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="input-modal-post" class="form-label" id="label-modal-post"></label>
+                        <input type="text" class="form-control" id="input-modal-post" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="adminOverviewModalReply" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabelReply">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/admin_overview" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="input-modal-reply" class="form-label" id="label-modal-reply"></label>
+                        <input type="text" class="form-control" id="input-modal-reply" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="adminOverviewModalSubreply" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabelSubreply">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/admin_overview" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="input-modal-subreply" class="form-label" id="label-modal-subreply"></label>
+                        <input type="text" class="form-control" id="input-modal-subreply" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="adminOverviewModalUser" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabelUser">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/admin_overview" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="input-modal-user" class="form-label" id="label-modal-user"></label>
+                        <input type="text" class="form-control" id="input-modal-user" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block tail %}
 {% endblock %}

@@ -90,15 +90,16 @@ class Main:
     def get_quiz_subjects(self):
         return [(x[0], x[1]) for x in self.read_table('quiz')]
 
-
     def alter_password(self, email, old_pwd, new_pwd):
         # "23FvMIs*5cx8fHRv"
         new_pwd = generate_password_hash(new_pwd)
         if self.verify_password(email, old_pwd):
-            self.execute_query(query_list=f"UPDATE users SET password = '{new_pwd}' where email = '{email}'", commit=True)
+            self.execute_query(query_list=f"UPDATE users SET password = '{new_pwd}' where email = '{email}'",
+                               commit=True)
             return True
         else:
             return False
+
 
 class User(Main):
     def __init__(self, nickname, password, role, first_name, last_name, email, last_login):
@@ -149,7 +150,7 @@ class Question(Main):
 
     def register_question(self):
         self.execute_query(
-            query_list=f"INSERT INTO question (quizID, question, answer_one, answer_two, answer_three, answer_four, correct_answer, image_id) VALUES ({self.quizID}, {self.question}, {self.answer_one}, {self.answer_two}, {self.answer_three}, {self.answer_four}, {self.correct_answer}, {self.image_id});",
+            query_list=f"INSERT INTO question (quizID, question, answer_one, answer_two, answer_three, answer_four, correct_answer, image_id) VALUES ({self.quizID}, '{self.question}', '{self.answer_one}', '{self.answer_two}', '{self.answer_three}', '{self.answer_four}', '{self.correct_answer}', {self.image_id});",
             commit=True)
 
 
@@ -167,12 +168,18 @@ class TranslationKorEng(Main):
 
 
 class Grades(Main):
-    def __init__(self, courseID, QuizID, userID, grade, date):
+    def __init__(self, courseID, QuizID, userID, score, total_score):
         self.courseID = courseID
         self.QuizID = QuizID
         self.userID = userID
-        self.grade = grade
-        self.date = date
+        self.score = score
+        self.total_score = total_score
+
+
+    def register_grades(self):
+        self.execute_query(
+            query_list=f"INSERT INTO grades (courseID, quizID, userID, score, total_score, date) VALUES ({self.courseID}, {self.QuizID}, {self.userID}, {self.score}, {self.total_score}, NOW())",
+            commit=True)
 
 
 class Discussion(Main):
@@ -184,7 +191,7 @@ class Discussion(Main):
 
     def register_discussion(self):
         self.execute_query(
-            query_list=f"INSERT INTO discussion (topic, date, userid, image_id, question) VALUES ('{self.topic}, NOW(), {self.userID}, {self.image_id}, {self.question} ')",
+            query_list=f"INSERT INTO discussion (topic, date, userid, image_id, question) VALUES ('{self.topic}', NOW(), {self.userID}, {self.image_id}, '{self.question}')",
             commit=True)
 
 
@@ -196,7 +203,7 @@ class Post(Main):
 
     def register_post(self):
         self.execute_query(
-            query_list=f"INSERT INTO post (post, date, discussionid, userid) VALUES ('{self.post}, NOW(), {self.discussionID}, {self.userID}')",
+            query_list=f"INSERT INTO post (post, date, discussionid, userid) VALUES ('{self.post}', NOW(), {self.discussionID}, {self.userID})",
             commit=True)
 
 
@@ -208,7 +215,7 @@ class Reply(Main):
 
     def register_reply(self):
         self.execute_query(
-            query_list=f"INSERT INTO reply (reply, date, postid, userid) VALUES ('{self.reply}, NOW(), {self.postID}, {self.userID}')",
+            query_list=f"INSERT INTO reply (reply, date, postid, userid) VALUES ('{self.reply}', NOW(), {self.postID}, {self.userID})",
             commit=True)
 
 
@@ -220,5 +227,5 @@ class SubReply(Main):
 
     def register_subreply(self):
         self.execute_query(
-            query_list=f"INSERT INTO subreply (subreply, date, replyid, userid) VALUES ('{self.subreply}, NOW(), {self.replyID}, {self.userID}')",
+            query_list=f"INSERT INTO subreply (subreply, date, replyid, userid) VALUES ('{self.subreply}', NOW(), {self.replyID}, {self.userID})",
             commit=True)
