@@ -16,7 +16,7 @@ class Main:
         try:
             # credentials = str(open("database_credentials.txt", 'r').read())
             DATABASE_URL = os.environ['DATABASE_URL']
-            conn = psycopg2.connect(credentials, sslmode='require')
+            conn = psycopg2.connect(DATABASE_URL, sslmode='require')
             c = conn.cursor()
             result = None
             if type(query_list) == str:
