@@ -13,9 +13,8 @@ from flask import Flask, render_template, session, redirect, url_for, flash, req
 import Database
 
 app = Flask(__name__)
-
-app.secret_key = str(open("secret_key.txt", 'r').read())
-
+main = Database.Main()
+app.secret_key = main.execute_query(query_list="SELECT value from settings where key = 'secret_key'", fetchOne=True)[0]
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -31,7 +30,6 @@ def admin_overview():
         flash('admin login credentials are required')
         return redirect(url_for('login'))
     else:
-        main = Database.Main()
         translation_data = main.read_table('translationkoreng')
         discussion_data = main.read_table('discussion')
         post_data = main.read_table('post')
@@ -60,7 +58,6 @@ def admin_register():
         flash('admin login credentials are required')
         return redirect(url_for('login'))
     else:
-        main = Database.Main()
         if request.method == "POST":
             for key in request.form:
                 if key == 'discussion651554661':
@@ -144,7 +141,6 @@ def login():
         session['logged_in_admin'] = False
         return render_template('login.html')
     elif request.method == 'POST':
-        main = Database.Main()
         if main.verify_password(request.form['emaillogin'], request.form['passwordlogin']):
             session['logged_in'] = True
             if main.verify_admin(request.form['emaillogin']):
@@ -168,7 +164,6 @@ def admin_overview_js ():
         flash('admin login credentials are required')
         return redirect(url_for('login'))
     else:
-        main = Database.Main()
         translation_data = main.read_table('translationkoreng')
         discussion_data = main.read_table('discussion')
         post_data = main.read_table('post')
