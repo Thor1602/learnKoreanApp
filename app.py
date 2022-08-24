@@ -22,7 +22,7 @@ app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
 if exists('secret_key.txt'):
     app.config['SECRET_KEY'] = open('secret_key.txt', 'r').read()
 else:
-    app.config['SECRET_KEY'] = main.execute_query(query_list="SELECT value from settings where key = 'secret_key'", fetchOne=True)[0]
+    app.config['SECRET_KEY'] = main.get_secret_key()
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -40,7 +40,7 @@ def admin_overview():
         return redirect(url_for('login'))
     else:
         database_data = main.read_database()
-        return render_template('admin_overview.html', database_data)
+        return render_template('admin_overview.html', database_data=database_data)
 
 
 @app.route('/admin_register', methods=['GET', 'POST'])
@@ -105,7 +105,8 @@ def quiz(quiz_id):
             session['questions_with_answer'] = quiz_questions[0]
             quiz_questions = main.translation_quiz(quiz_questions[0], quiz_questions[1])
             if len(quiz_questions) == 0:
-                return redirect(url_for('quizmenu', error="There are no questions for this topic."))
+                flash("There are no questions for this topic.")
+                return redirect(url_for('quizmenu'))
             else:
                 return render_template('quiz_t.html', quiz_id=quiz_id, quiz_questions=quiz_questions,
                                        number_of_questions=len(quiz_questions))
@@ -166,29 +167,33 @@ def mypage():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
     else:
-        return render_template('mypage.html')
+        name = main.get_user_name(session['current_user'])
+        return render_template('mypage.html', name=name)
 
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
         session.clear()
-        user_columns = main.read_columns('users')[1:7]
-        return render_template('register.html', user_columns=user_columns)
-    elif request.method == 'POST':
-        new_user = Database.User(request.form['nickname'], request.form['password'], '',request.form['first_name'], request.form['last_name'], request.form['email'])
-        if not new_user.user_exists():
+        return render_template('register.html')
+    else:
+        # 6vkNa::6wK4hrpK
+        new_user = Database.User(request.form['nickname'], request.form['password'], 'Member',request.form['first_name'], request.form['last_name'], request.form['email'])
+        if new_user.user_exists():
             flash("Email already exists.")
             return redirect(url_for('register'))
-        elif len(request.form['password']) < 8:
+        if len(request.form['password']) < 8:
             flash("Password needs to be longer than 8 characters")
             return redirect(url_for('register'))
-        else:
-            if main.verify_admin(request.form['emaillogin']):
-                session['logged_in_admin'] = True
-            session['logged_in'] = True
-            session['current_user'] = request.form['email']
-            return redirect(url_for('index'))
+        if request.form['password'] != request.form['password_confirm']:
+            flash("Passwords don't match")
+            return redirect(url_for('register'))
+        new_user.register_user()
+        if main.verify_admin(request.form['email']):
+            session['logged_in_admin'] = True
+        session['logged_in'] = True
+        session['current_user'] = request.form['email']
+        return redirect(url_for('index'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -204,6 +209,7 @@ def login():
             main.update_last_login(main.get_user_id(session['current_user']))
             return redirect(url_for('index'))
         else:
+            flash("incorrect credentials")
             return redirect(url_for('login'))
 
 

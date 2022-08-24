@@ -37,7 +37,7 @@
         <th scope="col" colspan="7">TRANSLATIONS</th>
     </tr>
     <tr>
-        {% for query in translation_columns %}
+        {% for query in database_data['translation_columns'] %}
         <th class="text-uppercase" scope="col">{{ query[0] }}</th>
         {% endfor %}
         <th scope="col">EDIT</th>
@@ -46,7 +46,7 @@
     </tr>
     </thead>
     <tbody>
-    {% for query in translation_data %}
+    {% for query in database_data['translation_data'] %}
     <tr>
         {% for element in query %}
         <th>{{ element }}</th>
@@ -66,11 +66,11 @@
 <table class="table table-warning table-striped  table-hover w-auto small" id="quiz_topic_table">
     <thead>
     <tr>
-        <th scope="col" colspan="4">QUIZ TOPICS</th>
+        <th scope="col" colspan="5">QUIZ TOPICS</th>
     </tr>
 
     <tr>
-        {% for query in quiz_columns %}
+        {% for query in database_data['quiz_columns'] %}
         <th class="text-uppercase" scope="col">{{ query[0] }}</th>
         {% endfor %}
         <th scope="col">EDIT</th>
@@ -79,7 +79,7 @@
     </tr>
     </thead>
     <tbody>
-    {% for query in quiz_data %}
+    {% for query in database_data['quiz_data'] %}
     <tr>
         {% for element in query %}
         <th>{{ element }}</th>
@@ -102,7 +102,7 @@
     </tr>
 
     <tr>
-        {% for query in question_columns %}
+        {% for query in database_data['question_columns'] %}
         {% if query[0][:7] == "answer_" %}
         <th class="text-uppercase" scope="col">{{ query[0][7:] }}</th>
         {% elif query[0][7:] == "_answer" %}
@@ -116,7 +116,7 @@
     </tr>
     </thead>
     <tbody>
-    {% for query in question_data %}
+    {% for query in database_data['question_data'] %}
     <tr>
         {% for element in query %}
         <th>{{ element }}</th>
@@ -140,7 +140,7 @@
     </tr>
 
     <tr>
-        {% for query in discussion_columns %}
+        {% for query in database_data['discussion_columns'] %}
         <th class="text-uppercase" scope="col">{{ query[0] }}</th>
         {% endfor %}
         <th scope="col">EDIT</th>
@@ -149,7 +149,7 @@
     </tr>
     </thead>
     <tbody>
-    {% for query in discussion_data %}
+    {% for query in database_data['discussion_data'] %}
     <tr>
         {% for element in query %}
         <th>{{ element }}</th>
@@ -174,7 +174,7 @@
     </tr>
 
     <tr>
-        {% for query in post_columns %}
+        {% for query in database_data['post_columns'] %}
         <th class="text-uppercase" scope="col">{{ query[0] }}</th>
         {% endfor %}
         <th scope="col">EDIT</th>
@@ -183,7 +183,7 @@
     </tr>
     </thead>
     <tbody>
-    {% for query in post_data %}
+    {% for query in database_data['post_data'] %}
     <tr>
         {% for element in query %}
         <th>{{ element }}</th>
@@ -207,7 +207,7 @@
     </tr>
 
     <tr>
-        {% for query in reply_columns %}
+        {% for query in database_data['reply_columns'] %}
         <th class="text-uppercase" scope="col">{{ query[0] }}</th>
         {% endfor %}
         <th scope="col">EDIT</th>
@@ -216,7 +216,7 @@
     </tr>
     </thead>
     <tbody>
-    {% for query in reply_data %}
+    {% for query in database_data['reply_data'] %}
     <tr>
         {% for element in query %}
         <th>{{ element }}</th>
@@ -240,7 +240,7 @@
     </tr>
 
     <tr>
-        {% for query in subreply_columns %}
+        {% for query in database_data['subreply_columns'] %}
         <th class="text-uppercase" scope="col">{{ query[0] }}</th>
         {% endfor %}
         <th scope="col">EDIT</th>
@@ -249,7 +249,7 @@
     </tr>
     </thead>
     <tbody>
-    {% for query in subreply_data %}
+    {% for query in database_data['subreply_data'] %}
     <tr>
         {% for element in query %}
         <th>{{ element }}</th>

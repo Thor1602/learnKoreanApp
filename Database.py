@@ -16,9 +16,9 @@ class Main:
 
     def execute_query(self, query_list, commit=False, fetchAll=False, fetchOne=False):
         try:
-            credentials = str(open("database_credentials.txt", 'r').read())
-            # DATABASE_URL = os.environ['DATABASE_URL']
-            conn = psycopg2.connect(credentials, sslmode='require')
+            # credentials = str(open("database_credentials.txt", 'r').read())
+            DATABASE_URL = os.environ['DATABASE_URL']
+            conn = psycopg2.connect(DATABASE_URL, sslmode='require')
             c = conn.cursor()
             result = None
             if type(query_list) == str:
@@ -94,6 +94,9 @@ class Main:
     def get_user_id(self, email):
         return self.execute_query(query_list=f"SELECT ID from users where email = '{email}'", fetchOne=True)[0]
 
+    def get_user_name(self, email):
+        return self.execute_query(query_list=f"SELECT first_name, last_name, nickname from users where email = '{email}'", fetchAll=True)
+
     def get_user_email(self, id):
         global email
         try:
@@ -109,6 +112,8 @@ class Main:
     def update_last_login(self, id):
         self.execute_query(query_list=F"UPDATE users SET last_login = NOW() where id = {id}", commit=True)
 
+    def get_secret_key(self):
+        return self.execute_query(query_list="SELECT value from settings where key = 'secret_key'", fetchOne=True)[0]
     def get_quiz_subjects(self):
         return [(x[0], x[1]) for x in self.read_table('quiz')]
 
@@ -166,7 +171,7 @@ class User(Main):
 
     def register_user(self):
         self.execute_query(
-            query_list=f"INSERT INTO users (first_name, last_name, nickname, password, role, email, last_login, created_on) VALUES ({self.first_name}, {self.last_name}, {self.nickname}, {self.password}, {self.role_name}, {self.email}, NOW(), NOW());",
+            query_list=f"INSERT INTO users (first_name, last_name, nickname, password, role_name, email, last_login, created_on) VALUES ('{self.first_name}', '{self.last_name}', '{self.nickname}', '{self.password}', '{self.role_name}', '{self.email}', NOW(), NOW());",
             commit=True)
 
     def user_exists(self):
