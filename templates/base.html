@@ -12,7 +12,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js"
             integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT"
             crossorigin="anonymous"></script>
-    <script src="https://cdn.tiny.cloud/1/e52lsm9v4b8tgxosu2ds8c83hb3tf3bjd8u44zoypolktlk7/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.tiny.cloud/1/e52lsm9v4b8tgxosu2ds8c83hb3tf3bjd8u44zoypolktlk7/tinymce/6/tinymce.min.js"
+            referrerpolicy="origin"></script>
 
 
     {% block head %}
@@ -50,7 +51,18 @@
         <p>{% block title_description %}{% endblock %}</p>
     </div>
     <div class="container content-body text-center">
-        {% block content %}{% endblock %}
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class=flashes>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+        {% block content %}
+
+        {% endblock %}
     </div>
     <div class="footer bg-blue text-center">
         <a href="#body-pd" title="To Top">

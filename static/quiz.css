@@ -1,4 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+:root {
+    --first-color: #293462;
+    --first-color-light: #AFA5D9;
+    --white-color: #F7F6FB;
+}
 
 .bg-red {
     background: #D61C4E;
@@ -16,84 +20,41 @@
     background: #FFF80A;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Roboto', sans-serif
+
+.radio-toolbar {
+    margin: 10px;
 }
 
-p {
-    margin: 0%
+.radio-toolbar input[type="radio"] {
+    opacity: 0;
+    position: fixed;
+    width: 0;
 }
 
-.container {
-    background: white;
-}
-
-
-label.box {
-    display: flex;
-    margin-top: 10px;
-    padding: 10px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    border: 1px solid #ddd
-}
-
-
-
-#one:checked ~ label.first, #two:checked ~ label.second, #three:checked ~ label.third, #four:checked ~ label.forth, #five:checked ~ label.fifth, #six:checked ~ label.sixth, #seven:checked ~ label.seveth, #eight:checked ~ label.eighth {
-    border-color: #FEB139
-}
-
-#one:checked ~ label.first .circle, #two:checked ~ label.second .circle, #three:checked ~ label.third .circle, #four:checked ~ label.forth .circle, #five:checked ~ label.fifth .circle, #six:checked ~ label.sixth .circle, #seven:checked ~ label.seveth .circle, #eight:checked ~ label.eighth .circle {
-    border: 6px solid #FEB139;
-    background-color: #fff
-}
-
-label.box:hover {
-    background: #FFF80A
-}
-
-label.box .course {
-    display: flex;
-    align-items: center;
-    width: 100%
-}
-
-label.box .circle {
-    height: 22px;
-    width: 22px;
-    border-radius: 50%;
-    margin-right: 15px;
-    border: 2px solid #ddd;
-    display: inline-block
-}
-
-input[type="radio"] {
-    display: none
-}
-
-.btn.btn-primary {
-    border-radius: 25px;
-    margin-top: 20px
-}
-
-@media (max-width: 450px) {
-    .subject {
-        font-size: 12px
-    }
-}
-.btn-quiz {
-    background: #293462;
+.radio-toolbar label {
+    display: inline-flex;
+    background-color: #293462;
     color: white;
-    border: none;
+    padding: 10px 20px;
+    margin: 3px;
+    font-family: sans-serif, Arial;
+    font-size: 16px;
+    border: 2px solid black;
+    border-radius: 4px;
 }
 
-.btn-quiz:hover {
-    background: #FFF80A;
-    color: black;
-    border: none;
+.radio-toolbar label:hover {
+        color: black;
 
+    background-color: #fffcac;
+}
+
+.radio-toolbar input[type="radio"]:focus + label {
+    border: 2px solid #fff930;
+}
+
+.radio-toolbar input[type="radio"]:checked + label {
+    color: black;
+    background-color: #fffcac;
+    border-color: #FFF80A;
 }

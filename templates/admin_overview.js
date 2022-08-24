@@ -62,37 +62,37 @@ $(document).ready(function () {
         $('#post_table').hide();
         $('#reply_table').hide();
     });
-    {% for query in translation_data %}
+    {% for query in database['translation_data'] %}
         $("#translation_edit_{{ query[0] }}").on("click", function () {
             $('#adminOverviewModalTranslation').modal("show");
         });
     {% endfor %}
-    {% for query in quiz_data %}
+    {% for query in database['quiz_data'] %}
         $("#quiz_edit_{{ query[0] }}").on("click", function () {
             $('#adminOverviewModalQuizTopic').modal("show");
         });
     {% endfor %}
-    {% for query in question_data %}
+    {% for query in database['question_data'] %}
         $("#question_edit_{{ query[0] }}").on("click", function () {
             $('#adminOverviewModalQuestion').modal("show");
         });
     {% endfor %}
-    {% for query in discussion_data %}
+    {% for query in database['discussion_data'] %}
         $("#discussion_edit_{{ query[0] }}").on("click", function () {
             $('#adminOverviewModalDiscussion').modal("show");
         });
     {% endfor %}
-    {% for query in post_data %}
+    {% for query in database['post_data'] %}
         $("#post_edit_{{ query[0] }}").on("click", function () {
             $('#adminOverviewModalPost').modal("show");
         });
     {% endfor %}
-    {% for query in reply_data %}
+    {% for query in database['reply_data'] %}
         $("#reply_edit_{{ query[0] }}").on("click", function () {
             $('#adminOverviewModalReply').modal("show");
         });
     {% endfor %}
-     {% for query in subreply_data %}
+     {% for query in database['subreply_data'] %}
         $("#subreply_edit_{{ query[0] }}").on("click", function () {
             $('#adminOverviewModalSubreply').modal("show");
         });

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block head %}
+    <link href="static/quiz.css" rel="stylesheet" type="text/css">
+{% endblock %}
+{% block title %}Quiz{% endblock %}
+{% block title_description %}Go for it{% endblock %}
+{% block content %}
+
+    <form method="post" action="/quiz{{ quiz_id }}">
+        <div class="row">
+            <div class="col-12"><p class="fw-bold">Long answer question</p>
+                <div class="form-check">
+                    <div><input type="radio" name="box" id="one">
+                        <input type="radio" name="box" id="two">
+                        <input type="radio" name="box" id="three">
+                        <input type="radio" name="box" id="four">
+                        <label for="one" class="box first">
+                            <div class="course"><span class="circle"></span> <span class="subject"> When its raining ,people's umbrella are all you're going to see from above </span>
+                            </div>
+                        </label>
+                        <label for="two" class="box second">
+                            <div class="course">
+                                <span class="circle"></span> <span class="subject"> When its raining,people's umbrella are all your going to see from above </span>
+                            </div>
+                        </label>
+                        <label for="three" class="box third">
+                            <div class="course">
+                                <span class="circle"></span> <span class="subject"> When its raining,peoples umbrella's are all you're going to see from above </span>
+                            </div>
+                        </label>
+                        <label for="four" class="box forth">
+                            <div class="course"><span class="circle"></span> <span
+                                    class="subject"> None of the above </span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary btn-quiz btn-lg"> continue</button>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+{% block tail %}
+    <script src="static/quiz.js"></script>
+
+{% endblock %}

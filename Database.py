@@ -1,4 +1,6 @@
 import os
+import random
+
 from werkzeug.security import generate_password_hash, check_password_hash
 from psycopg2 import Error
 import psycopg2
@@ -14,9 +16,9 @@ class Main:
 
     def execute_query(self, query_list, commit=False, fetchAll=False, fetchOne=False):
         try:
-            # credentials = str(open("database_credentials.txt", 'r').read())
-            DATABASE_URL = os.environ['DATABASE_URL']
-            conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+            credentials = str(open("database_credentials.txt", 'r').read())
+            # DATABASE_URL = os.environ['DATABASE_URL']
+            conn = psycopg2.connect(credentials, sslmode='require')
             c = conn.cursor()
             result = None
             if type(query_list) == str:
@@ -44,6 +46,24 @@ class Main:
 
     def read_table(self, table_name):
         return self.execute_query(query_list=f"SELECT * FROM {table_name}", fetchAll=True)
+    def read_database(self):
+        database = {}
+        database['translation_data'] = self.read_table('translationkoreng')
+        database['discussion_data'] = self.read_table('discussion')
+        database['post_data'] = self.read_table('post')
+        database['reply_data'] = self.read_table('reply')
+        database['subreply_data'] = self.read_table('subreply')
+        database['question_data'] = self.read_table('question')
+        database['quiz_data'] = self.read_table('quiz')
+
+        database['translation_columns'] = self.read_columns('translationkoreng')
+        database['discussion_columns'] = self.read_columns('discussion')
+        database['post_columns'] = self.read_columns('post')
+        database['reply_columns'] = self.read_columns('reply')
+        database['subreply_columns'] = self.read_columns('subreply')
+        database['question_columns'] = self.read_columns('question')
+        database['quiz_columns'] = self.read_columns('quiz')
+        return database
 
     def read_columns(self, db_name):
         return self.execute_query(
@@ -92,6 +112,9 @@ class Main:
     def get_quiz_subjects(self):
         return [(x[0], x[1]) for x in self.read_table('quiz')]
 
+    def get_quiz_type(self, id):
+        return self.execute_query(query_list=f"SELECT type from quiz where id = '{id}'", fetchAll=True)[0][0]
+
     def alter_password(self, email, old_pwd, new_pwd):
         # "23FvMIs*5cx8fHRv"
         new_pwd = generate_password_hash(new_pwd)
@@ -102,21 +125,52 @@ class Main:
         else:
             return False
 
+    def get_quiz_to_English(self, quizid):
+        questions_with_answer, all_answers = {}, []
+        for x in self.execute_query(query_list=f"SELECT * from translationkoreng where quizid = {quizid}", fetchAll=True):
+            questions_with_answer[x[1]] = x[2]
+            all_answers.append(x[2])
+        random.shuffle(all_answers)
+        return (questions_with_answer, all_answers)
+
+    def get_quiz_to_Korean(self, quizid):
+        questions_with_answer, all_answers = {}, []
+        for x in self.execute_query(query_list=f"SELECT * from translationkoreng where quizid = {quizid}", fetchAll=True):
+            questions_with_answer[x[2]] = x[1]
+            all_answers.append(x[1])
+        random.shuffle(all_answers)
+        return (questions_with_answer, all_answers)
+
+    def translation_quiz(self, questions_with_answer, all_answers):
+        questions = {}
+        for x in questions_with_answer:
+            answers, count, index = [], 0, 0
+            answers.append(questions_with_answer[x])
+            answers = answers + random.sample(all_answers, 3)
+            random.shuffle(answers)
+            questions[x] = answers
+            random.shuffle(all_answers)
+        return questions
+
+
+
 
 class User(Main):
-    def __init__(self, nickname, password, role, first_name, last_name, email, last_login):
+    def __init__(self, nickname, password, role, first_name, last_name, email):
         self.first_name = first_name
         self.last_name = last_name
         self.nickname = nickname
         self.password = generate_password_hash(password)
         self.role_name = role
         self.email = email
-        self.last_login = last_login
 
     def register_user(self):
         self.execute_query(
             query_list=f"INSERT INTO users (first_name, last_name, nickname, password, role, email, last_login, created_on) VALUES ({self.first_name}, {self.last_name}, {self.nickname}, {self.password}, {self.role_name}, {self.email}, NOW(), NOW());",
             commit=True)
+
+    def user_exists(self):
+        return self.execute_query(query_list=f"SELECT exists(select 1 from users where email = '{self.email}')", fetchOne=True)[0]
 
 
 class UserCourse(Main):
@@ -131,12 +185,22 @@ class Course(Main):
 
 
 class Quiz(Main):
-    def __init__(self, name):
+    def __init__(self, name, type):
         self.name = name
+        self.type = type
 
     def register_quiz(self):
         self.execute_query(
             query_list=f"INSERT INTO quiz (name) VALUES ('{self.name}')", commit=True)
+
+    def update_quiz_type(self, name):
+        self.execute_query(
+            query_list=f"UPDATE quiz SET type = '{self.type}' WHERE name = '{name}'", commit=True)
+
+
+    def update_quiz(self, id):
+        self.execute_query(
+            query_list=f"UPDATE quiz SET name = '{self.name}', type = '{self.type}' WHERE ID = {id}", commit=True)
 
 
 class Question(Main):

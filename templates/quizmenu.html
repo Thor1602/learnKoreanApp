@@ -1,8 +1,23 @@
 {% extends "base.html" %}
-    {% block title %}Quizzes{% endblock %}
-    {% block title_description %}Improve your Korean language Skills{% endblock %}
+{% block title %}Quizzes{% endblock %}
+{% block title_description %}Improve your Korean language Skills{% endblock %}
 {% block content %}
-    <button><a href="/quiz">KIIP beginner 2 Vocabulary unit 1 - 초급2 어휘 단원1</a></button>
+
+<!--<p class="red">{{ error }}</p>-->
+<table class="table table-warning table-striped  table-hover w-auto small" id="reply_table">
+    <thead>
+    <tr>
+        <th class="text-uppercase text-decoration-none" scope="col">Quiz Name</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for topic in quizzes %}
+    <tr>
+        <th><a href="/quiz{{ topic [0] }}">{{ topic [1] }}</a></th>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
 
 {% endblock %}
 

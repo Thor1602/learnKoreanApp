@@ -60,13 +60,21 @@
                 {% endblock %}
 
 
-
             </ul>
         </div>
         <h1>{% block title %}{% endblock %}</h1>
         <p>{% block title_description %}{% endblock %}</p>
     </div>
     <div class="container content-body text-center">
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class=flashes>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
         {% block content %}{% endblock %}
     </div>
     <div class="footer bg-blue text-center">
