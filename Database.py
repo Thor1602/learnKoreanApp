@@ -16,9 +16,9 @@ class Main:
 
     def execute_query(self, query_list, commit=False, fetchAll=False, fetchOne=False):
         try:
-            # credentials = str(open("database_credentials.txt", 'r').read())
-            DATABASE_URL = os.environ['DATABASE_URL']
-            conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+            credentials = str(open("database_credentials.txt", 'r').read())
+            # DATABASE_URL = os.environ['DATABASE_URL']
+            conn = psycopg2.connect(credentials, sslmode='require')
             c = conn.cursor()
             result = None
             if type(query_list) == str:
@@ -46,6 +46,7 @@ class Main:
 
     def read_table(self, table_name):
         return self.execute_query(query_list=f"SELECT * FROM {table_name}", fetchAll=True)
+
     def read_database(self):
         database = {}
         database['translation_data'] = self.read_table('translationkoreng')
@@ -95,7 +96,8 @@ class Main:
         return self.execute_query(query_list=f"SELECT ID from users where email = '{email}'", fetchOne=True)[0]
 
     def get_user_name(self, email):
-        return self.execute_query(query_list=f"SELECT first_name, last_name, nickname from users where email = '{email}'", fetchAll=True)
+        return self.execute_query(
+            query_list=f"SELECT first_name, last_name, nickname from users where email = '{email}'", fetchAll=True)
 
     def get_user_email(self, id):
         global email
@@ -114,6 +116,7 @@ class Main:
 
     def get_secret_key(self):
         return self.execute_query(query_list="SELECT value from settings where key = 'secret_key'", fetchOne=True)[0]
+
     def get_quiz_subjects(self):
         return [(x[0], x[1]) for x in self.read_table('quiz')]
 
@@ -132,7 +135,8 @@ class Main:
 
     def get_quiz_to_English(self, quizid):
         questions_with_answer, all_answers = {}, []
-        for x in self.execute_query(query_list=f"SELECT * from translationkoreng where quizid = {quizid}", fetchAll=True):
+        for x in self.execute_query(query_list=f"SELECT * from translationkoreng where quizid = {quizid}",
+                                    fetchAll=True):
             questions_with_answer[x[1]] = x[2]
             all_answers.append(x[2])
         random.shuffle(all_answers)
@@ -140,7 +144,8 @@ class Main:
 
     def get_quiz_to_Korean(self, quizid):
         questions_with_answer, all_answers = {}, []
-        for x in self.execute_query(query_list=f"SELECT * from translationkoreng where quizid = {quizid}", fetchAll=True):
+        for x in self.execute_query(query_list=f"SELECT * from translationkoreng where quizid = {quizid}",
+                                    fetchAll=True):
             questions_with_answer[x[2]] = x[1]
             all_answers.append(x[1])
         random.shuffle(all_answers)
@@ -157,7 +162,27 @@ class Main:
             random.shuffle(all_answers)
         return questions
 
+    def get_quiz_name(self, id):
+        return self.execute_query(query_list=f"SELECT name from quiz where id = '{id}'", fetchOne=True)[0]
 
+    def get_grades(self, userID):
+        query = self.execute_query(
+            query_list=f"SELECT id, courseid, quizid, score, total_score, date_trunc('minute', date) from grades where userid = {userID} ORDER BY date DESC;",
+            fetchAll=True)
+        modified_query = []
+        for row in query:
+            row = [x for x in row]
+            modified_query.append(row)
+        for row in modified_query:
+            row[2] = self.get_quiz_name(row[2])
+        return modified_query
+
+    def get_quiz_results(self, userid, gradeid):
+        grade = \
+        self.execute_query(query_list=f"SELECT * FROM grades WHERE userid = {userid} ORDER BY date DESC LIMIT 1;",
+                           fetchAll=True)[0]
+        review = self.execute_query(query_list=f"SELECT * FROM reviews WHERE gradeid = {gradeid}", fetchAll=True)
+        return grade, review
 
 
 class User(Main):
@@ -175,7 +200,8 @@ class User(Main):
             commit=True)
 
     def user_exists(self):
-        return self.execute_query(query_list=f"SELECT exists(select 1 from users where email = '{self.email}')", fetchOne=True)[0]
+        return self.execute_query(query_list=f"SELECT exists(select 1 from users where email = '{self.email}')",
+                                  fetchOne=True)[0]
 
 
 class UserCourse(Main):
@@ -187,6 +213,10 @@ class UserCourse(Main):
 class Course(Main):
     def __init__(self, name):
         self.name = name
+
+    def register_course(self):
+        self.execute_query(
+            query_list=f"INSERT INTO course (name) VALUES ('{self.name}')", commit=True)
 
 
 class Quiz(Main):
@@ -201,7 +231,6 @@ class Quiz(Main):
     def update_quiz_type(self, name):
         self.execute_query(
             query_list=f"UPDATE quiz SET type = '{self.type}' WHERE name = '{name}'", commit=True)
-
 
     def update_quiz(self, id):
         self.execute_query(
@@ -246,10 +275,27 @@ class Grades(Main):
         self.score = score
         self.total_score = total_score
 
-
     def register_grades(self):
         self.execute_query(
             query_list=f"INSERT INTO grades (courseID, quizID, userID, score, total_score, date) VALUES ({self.courseID}, {self.QuizID}, {self.userID}, {self.score}, {self.total_score}, NOW())",
+            commit=True)
+
+    def get_id_currval(self):
+        return self.execute_query(query_list=f"SELECT id FROM grades ORDER BY date DESC LIMIT 1;", fetchOne=True)[0]
+
+
+class Review(Main):
+    def __init__(self, gradeID, userID, question, given_answer, correct_answer, score):
+        self.gradeID = gradeID
+        self.userID = userID
+        self.question = question
+        self.given_answer = given_answer
+        self.correct_answer = correct_answer
+        self.score = score
+
+    def register_review(self):
+        self.execute_query(
+            query_list=f"INSERT INTO reviews (gradeID, userID, question, given_answer, correct_answer, score) VALUES ({self.gradeID}, {self.userID}, '{self.question}', '{self.given_answer}', '{self.correct_answer}', '{self.score}')",
             commit=True)
 
 

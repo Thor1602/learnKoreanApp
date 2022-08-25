@@ -12,17 +12,16 @@
         <div class="radio-toolbar">
             <div class="row">
                 {% set outer_loop = loop.index %}
-                {% for answer in quiz_questions[key] %}
+                {% for possible_answer in quiz_questions[key] %}
                 <div class="col-md-6">
-                    <input type="radio" name="name_{{ outer_loop }}" id="id_{{ outer_loop }}_{{ loop.index }}" value="{{ answer }}">
-                    <label for="id_{{ outer_loop }}_{{ loop.index }}">{{ answer }}</label>
+                    <input type="radio" name="{{ key }}" id="id_{{ outer_loop }}_{{ loop.index }}" value="{{ possible_answer }}">
+                    <label for="id_{{ outer_loop }}_{{ loop.index }}">{{ possible_answer }}</label>
                 </div>
                 {% endfor %}
             </div>
         </div>
     </div>
     {% endfor %}
-    <input type="text" name="number_of_questions" value="{{ number_of_questions }}" checked hidden>
     <div class="col-12">
         <div class="d-flex justify-content-center">
             <button type="submit" class="btn btn-primary btn-quiz btn-lg"> continue</button>
