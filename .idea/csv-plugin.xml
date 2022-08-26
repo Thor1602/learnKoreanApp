@@ -17,6 +17,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\requirements.txt">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\static\quiz.css">
           <value>
             <Attribute>
