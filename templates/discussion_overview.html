@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Discussion Overview{% endblock %}
+{% block title_description %}Improve your Korean language Skills{% endblock %}
+{% block content %}
+{% for topic in topics %}
+<div class="row mb-1 mt-1">
+    <div class="col">
+        <h4>{{ topic[1] }}</h4>
+    </div>
+    <div class="col">
+        <form method="post" action="/discussion_{{ topic[0] }}">
+            <button type="submit" class="btn btn-success" name="id" >Go to</button>
+        </form>
+    </div>
+</div>
+<hr>
+{% endfor %}
+{% endblock %}

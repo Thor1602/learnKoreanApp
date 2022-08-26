@@ -38,6 +38,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\templates\discussion.html">
+          <value>
+            <Attribute>
+              <option name="separator" value=":" />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\templates\quiz_t.html">
           <value>
             <Attribute>

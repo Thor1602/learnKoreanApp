@@ -8,11 +8,13 @@ a Creative Commons Attribution-ShareAlike 3.0 Unported License.
 email: thorbendhaenenstd@gmail.com
 
 """
+import re
 from datetime import timedelta
 
 from flask import Flask, render_template, session, redirect, url_for, flash, request, abort
 import Database
 from os.path import exists
+from markupsafe import Markup
 
 app = Flask(__name__)
 app.static_folder = 'static'
@@ -160,19 +162,26 @@ def quizresult():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
     else:
-        print(session['grade_id'])
         user_id = main.get_user_id(session['current_user'])
         result = main.get_quiz_results(userid=user_id, gradeid=session['grade_id'])
         return render_template('quizresult.html', result=result)
 
 
-@app.route('/discussion', methods=['GET', 'POST'])
-def discussion():
+@app.route('/discussion_overview', methods=['GET', 'POST'])
+def discussion_overview():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
     else:
-        return render_template('discussion.html')
+        topics = main.read_table('discussion')
+        return render_template('discussion_overview.html', topics=topics)
 
+@app.route('/discussion_<discussion_id>', methods=['GET', 'POST'])
+def discussion(discussion_id):
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    else:
+        all_discussion_queries = main.get_all_discussion_queries(discussion_id=discussion_id)
+        return render_template('discussion.html', all_discussion_queries=all_discussion_queries)
 
 @app.route('/mypage', methods=['GET', 'POST'])
 def mypage():

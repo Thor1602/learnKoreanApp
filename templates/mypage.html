@@ -7,26 +7,26 @@
 <table class="table table-warning table-striped  table-hover w-auto small" id="question_table">
     <thead>
     <tr>
-        <th scope="col" colspan="6">RESULTS QUIZZES</th>
+        <th scope="col" colspan="4">RESULTS QUIZZES</th>
     </tr>
 
     <tr>
-        <th class="text-uppercase" scope="col">Course</th>
         <th class="text-uppercase" scope="col">Quiz name</th>
         <th class="text-uppercase" scope="col">Score</th>
         <th class="text-uppercase" scope="col">Total Score</th>
         <th class="text-uppercase" scope="col">Date</th>
-        <th class="text-uppercase" scope="col"></th>
 
     </tr>
     </thead>
     <tbody>
     {% for query in grades_data %}
     <tr>
-        {% for element in query[1:] %}
+        {% for element in query[2:] %}
         <th>{{ element }}</th>
         {% endfor %}
-        <th>
+    </tr>
+    <tr>
+        <th colspan="4">
             <button type="button" class="btn btn-success" data-bs-toggle="modal"
                     data-bs-target="#review_{{ query[0] }}">
                 Review
@@ -37,7 +37,8 @@
     </tbody>
 </table>
 {% for query in grades_data %}
-<div class="modal fade" id="review_{{ query[0] }}" tabindex="-1" aria-labelledby="modalLabel{{ query[0] }}" aria-hidden="true">
+<div class="modal fade" id="review_{{ query[0] }}" tabindex="-1" aria-labelledby="modalLabel{{ query[0] }}"
+     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

@@ -16,9 +16,9 @@ class Main:
 
     def execute_query(self, query_list, commit=False, fetchAll=False, fetchOne=False):
         try:
-            # credentials = str(open("database_credentials.txt", 'r').read())
-            DATABASE_URL = os.environ['DATABASE_URL']
-            conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+            credentials = str(open("database_credentials.txt", 'r').read())
+            # DATABASE_URL = os.environ['DATABASE_URL']
+            conn = psycopg2.connect(credentials, sslmode='require')
             c = conn.cursor()
             result = None
             if type(query_list) == str:
@@ -184,6 +184,32 @@ class Main:
         review = self.execute_query(query_list=f"SELECT * FROM reviews WHERE gradeid = {gradeid}", fetchAll=True)
         return grade, review
 
+    def get_row_by_id(self, table, id):
+        return self.execute_query(query_list=f"SELECT * from {table} where id = {id};", fetchAll=True)
+
+    def get_discussion_id_structure(self, discussion_id):
+        posts = self.execute_query(query_list=f"SELECT id from post where discussionid = {discussion_id};", fetchAll=True)
+        routing = {x[0]: None for x in posts}
+        post_ids = [x[0] for x in posts]
+        for post_id in post_ids:
+            replies = self.execute_query(query_list=f"SELECT id from reply where postid = {post_id};", fetchAll=True)
+            routing[post_id] = {x[0]: None for x in replies}
+            reply_ids = [x[0] for x in replies]
+            for reply_id in reply_ids:
+                subreplies = self.execute_query(query_list=f"SELECT id from subreply where replyid = {reply_id};", fetchAll=True)
+                routing[post_id][reply_id] = [x[0] for x in subreplies]
+        return routing
+
+    def get_all_discussion_queries(self, discussion_id):
+        d = self.get_discussion_id_structure(discussion_id)
+        all_queries = {'post': [], 'reply': [], 'subreply': []}
+        for i in d:
+            all_queries['post'].append(self.get_row_by_id('post', i))
+            for x in d[i]:
+                all_queries['reply'].append(self.get_row_by_id('reply', x))
+                for j in d[i][x]:
+                    all_queries['subreply'].append(self.get_row_by_id('subreply', j))
+        return all_queries
 
 class User(Main):
     def __init__(self, nickname, password, role, first_name, last_name, email):
