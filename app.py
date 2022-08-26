@@ -14,7 +14,6 @@ from datetime import timedelta
 from flask import Flask, render_template, session, redirect, url_for, flash, request, abort
 import Database
 from os.path import exists
-from markupsafe import Markup
 
 app = Flask(__name__)
 app.static_folder = 'static'
