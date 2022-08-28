@@ -98,19 +98,37 @@ def quiz(quiz_id):
         return redirect(url_for('login'))
     else:
         if main.get_quiz_type(quiz_id) == 'translate_to_Kor':
+            quiz_data = main.get_quiz_to_Korean(quiz_id)
+            quiz_questions = main.translation_quiz(quiz_data[0], quiz_data[1])
+            number_of_questions = len(quiz_questions)
             if request.method == 'POST':
-                grades = Database.Grades(1, quiz_id, main.get_user_id(session['current_user']), 8,
-                                         request.form['number_of_questions'])
+                question_with_answers = quiz_data[0]
+                quiz_review = {}
+                score = 0
+                for question in request.form:
+                    if question in question_with_answers:
+                        if request.form[question] == question_with_answers[question]:
+                            score += 1
+                            quiz_review[question] = {'given answer: ': request.form[question],
+                                                     'correct answer': question_with_answers[question], 'score': 1}
+                        else:
+                            quiz_review[question] = {'given answer: ': request.form[question],
+                                                     'correct answer': question_with_answers[question], 'score': 0}
+                user_id = main.get_user_id(session['current_user'])
+                grades = Database.Grades(1, quiz_id, user_id, score, number_of_questions)
+                grades.register_grades()
+                session['grade_id'] = grades.get_id_currval()
+                for question, results in quiz_review.items():
+                    review = Database.Review(gradeID=session['grade_id'], userID=user_id, question=question,
+                                             given_answer=results['given answer: '],
+                                             correct_answer=results['correct answer'], score=results['score'])
+                    review.register_review()
                 return redirect(url_for('quizresult'))
-            quiz_questions = main.get_quiz_to_Korean(quiz_id)
-            session['questions_with_answer'] = quiz_questions[0]
-            quiz_questions = main.translation_quiz(quiz_questions[0], quiz_questions[1])
             if len(quiz_questions) == 0:
-                flash("There are no questions for this topic.")
+                flash("There are no questions for this topic. ")
                 return redirect(url_for('quizmenu'))
             else:
-                return render_template('quiz_t.html', quiz_id=quiz_id, quiz_questions=quiz_questions,
-                                       number_of_questions=len(quiz_questions))
+                return render_template('quiz_t.html', quiz_id=quiz_id, quiz_questions=quiz_questions)
 
         elif main.get_quiz_type(quiz_id) == 'translate_to_Eng':
             quiz_data = main.get_quiz_to_English(quiz_id)
@@ -136,21 +154,74 @@ def quiz(quiz_id):
                     review.register_review()
                 return redirect(url_for('quizresult'))
             if len(quiz_questions) == 0:
-                return redirect(url_for('quizmenu', error="There are no questions for this topic. "))
+                flash("There are no questions for this topic. ")
+                return redirect(url_for('quizmenu'))
             else:
                 return render_template('quiz_t.html', quiz_id=quiz_id, quiz_questions=quiz_questions)
 
         elif main.get_quiz_type(quiz_id) == 'short_answers':
+            quiz_data = main.get_quiz(quiz_id)
+            number_of_questions = len(quiz_data)
             if request.method == 'POST':
-                grades = Database.Grades(1, quiz_id, main.get_user_id(session['current_user']), 8, 10)
+                quiz_review = {}
+                score = 0
+                for question in request.form:
+                    if question in quiz_data:
+                        if request.form[question] == quiz_data[question]['correct_answer']:
+                            score += 1
+                            quiz_review[question] = {'given answer: ': request.form[question],
+                                                     'correct answer': quiz_data[question]['correct_answer'], 'score': 1}
+                        else:
+                            quiz_review[question] = {'given answer: ': request.form[question],
+                                                     'correct answer': quiz_data[question]['correct_answer'], 'score': 0}
+                user_id = main.get_user_id(session['current_user'])
+                grades = Database.Grades(1, quiz_id, user_id, score, number_of_questions)
+                grades.register_grades()
+                session['grade_id'] = grades.get_id_currval()
+                for question, results in quiz_review.items():
+                    review = Database.Review(gradeID=session['grade_id'], userID=user_id, question=question,
+                                             given_answer=results['given answer: '],
+                                             correct_answer=results['correct answer'], score=results['score'])
+                    review.register_review()
                 return redirect(url_for('quizresult'))
-            return render_template('quiz_sa.html', quiz_id=quiz_id)
+            if len(quiz_data) == 0:
+                flash("There are no questions for this topic. ")
+                return redirect(url_for('quizmenu'))
+            else:
+                return render_template('quiz_sa.html', quiz_id=quiz_id, quiz_questions=quiz_data)
 
         elif main.get_quiz_type(quiz_id) == 'long_answers':
+            quiz_data = main.get_quiz_to_Korean(quiz_id)
+            quiz_questions = main.translation_quiz(quiz_data[0], quiz_data[1])
+            number_of_questions = len(quiz_questions)
             if request.method == 'POST':
-                grades = Database.Grades(courseID=1, QuizID=quiz_id, userID=main.get_user_id(session['current_user']), score=8, total_score=10)
+                question_with_answers = quiz_data[0]
+                quiz_review = {}
+                score = 0
+                for question in request.form:
+                    if question in question_with_answers:
+                        if request.form[question] == question_with_answers[question]:
+                            score += 1
+                            quiz_review[question] = {'given answer: ': request.form[question],
+                                                     'correct answer': question_with_answers[question], 'score': 1}
+                        else:
+                            quiz_review[question] = {'given answer: ': request.form[question],
+                                                     'correct answer': question_with_answers[question], 'score': 0}
+                user_id = main.get_user_id(session['current_user'])
+                grades = Database.Grades(1, quiz_id, user_id, score, number_of_questions)
+                grades.register_grades()
+                session['grade_id'] = grades.get_id_currval()
+                for question, results in quiz_review.items():
+                    review = Database.Review(gradeID=session['grade_id'], userID=user_id, question=question,
+                                             given_answer=results['given answer: '],
+                                             correct_answer=results['correct answer'], score=results['score'])
+                    review.register_review()
                 return redirect(url_for('quizresult'))
-            return render_template('quiz_t.html', quiz_id=quiz_id)
+            if len(quiz_questions) == 0:
+                flash("There are no questions for this topic. ")
+                return redirect(url_for('quizmenu'))
+            else:
+                return render_template('quiz_la.html', quiz_id=quiz_id, quiz_questions=quiz_questions)
 
         else:
             abort(400)
