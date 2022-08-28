@@ -191,22 +191,22 @@ def quiz(quiz_id):
                 return render_template('quiz_sa.html', quiz_id=quiz_id, quiz_questions=quiz_data)
 
         elif main.get_quiz_type(quiz_id) == 'long_answers':
-            quiz_data = main.get_quiz_to_Korean(quiz_id)
-            quiz_questions = main.translation_quiz(quiz_data[0], quiz_data[1])
-            number_of_questions = len(quiz_questions)
+            quiz_data = main.get_quiz(quiz_id)
+            number_of_questions = len(quiz_data)
             if request.method == 'POST':
-                question_with_answers = quiz_data[0]
                 quiz_review = {}
                 score = 0
                 for question in request.form:
-                    if question in question_with_answers:
-                        if request.form[question] == question_with_answers[question]:
+                    if question in quiz_data:
+                        if request.form[question] == quiz_data[question]['correct_answer']:
                             score += 1
                             quiz_review[question] = {'given answer: ': request.form[question],
-                                                     'correct answer': question_with_answers[question], 'score': 1}
+                                                     'correct answer': quiz_data[question]['correct_answer'],
+                                                     'score': 1}
                         else:
                             quiz_review[question] = {'given answer: ': request.form[question],
-                                                     'correct answer': question_with_answers[question], 'score': 0}
+                                                     'correct answer': quiz_data[question]['correct_answer'],
+                                                     'score': 0}
                 user_id = main.get_user_id(session['current_user'])
                 grades = Database.Grades(1, quiz_id, user_id, score, number_of_questions)
                 grades.register_grades()
@@ -217,11 +217,11 @@ def quiz(quiz_id):
                                              correct_answer=results['correct answer'], score=results['score'])
                     review.register_review()
                 return redirect(url_for('quizresult'))
-            if len(quiz_questions) == 0:
+            if len(quiz_data) == 0:
                 flash("There are no questions for this topic. ")
                 return redirect(url_for('quizmenu'))
             else:
-                return render_template('quiz_la.html', quiz_id=quiz_id, quiz_questions=quiz_questions)
+                return render_template('quiz_la.html', quiz_id=quiz_id, quiz_questions=quiz_data)
 
         else:
             abort(400)

@@ -70,8 +70,8 @@ class Main:
         return self.execute_query(
             "SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '" + db_name + "';", fetchAll=True)
 
-    def del_comment(self, id, db_name):
-        self.execute_query(query_list=f'DELETE FROM {db_name} WHERE id = {id}', commit=True)
+    def del_row(self, id, table):
+        self.execute_query(query_list=f'DELETE FROM {table} WHERE id = {id}', commit=True)
 
     def add_column(self, table_name, new_column_name, column_definition):
         self.execute_query(f"ALTER TABLE {table_name} ADD {new_column_name} {column_definition};", commit=True)
@@ -133,13 +133,20 @@ class Main:
         else:
             return False
 
+    def shuffle_dictionary(self, d):
+        keys = list(d.keys())
+        random.shuffle(keys)
+        shuffled_dict = dict()
+        for key in keys:
+            shuffled_dict.update({key: d[key]})
+        return shuffled_dict
 
     def get_quiz(self, quizid):
         questions_with_answer = {}
         for x in self.execute_query(query_list=f"SELECT * from question where quizid = {quizid}",fetchAll=True):
             questions_with_answer[x[2]] = {'correct_answer': x[7], 'possible_answers': [x[3],x[4],x[5],x[6]]}
             random.shuffle(questions_with_answer[x[2]]['possible_answers'])
-        random.shuffle(questions_with_answer)
+        questions_with_answer = self.shuffle_dictionary(questions_with_answer)
         return questions_with_answer
 
     def get_quiz_to_English(self, quizid):
@@ -149,7 +156,7 @@ class Main:
             questions_with_answer[x[1]] = x[2]
             all_answers.append(x[2])
         random.shuffle(all_answers)
-        random.shuffle(questions_with_answer)
+        questions_with_answer = self.shuffle_dictionary(questions_with_answer)
         return (questions_with_answer, all_answers)
 
     def get_quiz_to_Korean(self, quizid):
@@ -159,7 +166,7 @@ class Main:
             questions_with_answer[x[2]] = x[1]
             all_answers.append(x[1])
         random.shuffle(all_answers)
-        random.shuffle(questions_with_answer)
+        questions_with_answer = self.shuffle_dictionary(questions_with_answer)
         return (questions_with_answer, all_answers)
 
     def translation_quiz(self, questions_with_answer, all_answers):
@@ -263,7 +270,7 @@ class Quiz(Main):
 
     def register_quiz(self):
         self.execute_query(
-            query_list=f"INSERT INTO quiz (name) VALUES ('{self.name}')", commit=True)
+            query_list=f"INSERT INTO quiz (name, type) VALUES ('{self.name}', '{self.type}')", commit=True)
 
     def update_quiz_type(self, name):
         self.execute_query(

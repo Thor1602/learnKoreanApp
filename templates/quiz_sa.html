@@ -1,52 +1,41 @@
 {% extends "base.html" %}
 {% block head %}
-    <link href="static/quiz.css" rel="stylesheet" type="text/css">
+<link href="static/quiz.css" rel="stylesheet" type="text/css">
 {% endblock %}
 {% block title %}Quiz{% endblock %}
 {% block title_description %}Go for it{% endblock %}
 {% block content %}
 
-    <form method="post" action="/quiz{{ quiz_id }}">
-        <div class="col-12"><p class="fw-bold mt-5">Short answer question</p>
-            <div class="form-check">
-                <div class="row">
-                    <div class="col-md-6">
-                        <input type="radio" name="boxx" id="five">
-                        <label for="five" class="box fifth w-100">
-                            <div class="course"><span class="circle"></span>
-                                <span class="subject">is</span></div>
-                        </label>
-                    </div>
-                    <div class="col-md-6">
-                        <input type="radio" name="boxx" id="six">
-                        <label for="six" class="box sixth w-100">
-                            <div class="course"><span class="circle"></span> <span class="subject"> was </span></div>
-                        </label>
-                    </div>
-                    <div class="col-md-6">
-                        <input type="radio" name="boxx" id="seven">
-                        <label for="seven" class="box seveth w-100">
-                            <div class="course"><span class="circle"></span> <span class="subject"> will </span></div>
-                        </label>
-                    </div>
-                    <div class="col-md-6">
-                        <input type="radio" name="boxx" id="eight">
-                        <label for="eight" class="box eighth w-100">
-                            <div class="course"><span class="circle"></span> <span
-                                    class="subject"> None of the above </span></div>
-                        </label>
-                    </div>
+<form method="post" action="/quiz{{ quiz_id }}">
+    {% for key in quiz_questions %}
+    <div class="col-12">
+        {% if some_var|length > 50 %}
+        <h6 class="fw-bold mt-5">{{ key }}</h6>
+        {% else %}
+        <h4 class="fw-bold mt-5">{{ key }}</h4>
+        {% endif %}
+        <div class="radio-toolbar">
+            <div class="row">
+                {% set outer_loop = loop.index %}
+                {% for possible_answer in quiz_questions[key]['possible_answers'] %}
+                <div class="col-md-6">
+                    <input type="radio" name="{{ key }}" id="id_{{ outer_loop }}_{{ loop.index }}" value="{{ possible_answer }}">
+                    <label for="id_{{ outer_loop }}_{{ loop.index }}">{{ possible_answer }}</label>
                 </div>
+                {% endfor %}
             </div>
         </div>
-        <div class="col-12">
-            <div class="d-flex justify-content-center">
-                <button type="submit" class="btn btn-primary btn-quiz btn-lg"> continue</button>
-            </div>
+    </div>
+    {% endfor %}
+
+    <div class="col-12">
+        <div class="d-flex justify-content-center">
+            <button type="submit" class="btn btn-primary btn-quiz btn-lg"> SUBMIT</button>
         </div>
-    </form>
+    </div>
+</form>
 {% endblock %}
 {% block tail %}
-    <script src="static/quiz.js"></script>
+<script src="static/quiz.js"></script>
 
 {% endblock %}

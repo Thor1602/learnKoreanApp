@@ -25,7 +25,12 @@
     <form action="/admin_register" method="post">
         <div class="mb-3">
             <label for="quizName" class="form-label">Topic</label>
-            <input type="text" class="form-control" id="quizName" placeholder="e.g. PostPositions"
+            <input type="text" class="form-control" id="quizName" placeholder="e.g. dogs quiz"
+                   name="quizName" required>
+        </div>
+        <div class="mb-3">
+            <label for="quizType" class="form-label">Topic</label>
+            <input type="text" class="form-control" id="quizType" placeholder="e.g. animals"
                    name="quizName" required>
         </div>
         <hr>
