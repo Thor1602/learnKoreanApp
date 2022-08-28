@@ -2,123 +2,132 @@
 {% block title %}Admin Register {% endblock %}
 {% block title_description %}Only for admins (not you mr(s). Hacker){% endblock %}
 {% block content %}
+<hr>
+
+<h2>Discussion</h2>
+<form action="/admin_register" method="post">
+    <div class="mb-3">
+        <label for="discussionTopic" class="form-label">Topic</label>
+        <input type="text" class="form-control" id="discussionTopic" placeholder="e.g. PostPositions"
+               name="discussionTopic" required>
+    </div>
+    <div class="mb-3">
+        <label for="discussionQuestion" class="form-label">Question</label>
+        <textarea class="form-control rich-text-editor" id="discussionQuestion" rows="3"
+                  placeholder="e.g. describe the differences between 예 and 에서" name="discussionQuestion"></textarea>
+    </div>
+    <div></div>
+    <button class="btn btn-primary btn-login" type="submit" name="discussion651554661">SAVE</button>
+</form>
+<hr>
+
+<h2>Defining New Quiz Subject</h2>
+<form action="/admin_register" method="post">
+    <div class="mb-3">
+        <label for="quizName" class="form-label">Topic</label>
+        <input type="text" class="form-control" id="quizName" placeholder="e.g. dogs quiz"
+               name="quizName" required>
+    </div>
+    <div class="mb-3">
+        <label for="quizType" class="form-label">Type</label>
+        <select class="form-select" id="quizType" name="quizType" aria-label="Default select example" required>
+            <option selected value="invalid">Choose</option>
+            <option value="long_answers">Long Answers</option>
+            <option value="short_answers">Short Answers</option>
+            <option value="translate_to_Eng">Translate To English</option>
+            <option value="translate_to_Kor">Translate To Korean</option>
+
+        </select>
+    </div>
     <hr>
+    <button class="btn btn-primary btn-login" type="submit" name="quizname564151154">SAVE</button>
+</form>
+<hr>
+<h2>Defining New Quiz Questions</h2>
 
-    <h2>Discussion</h2>
-    <form action="/admin_register" method="post">
-        <div class="mb-3">
-            <label for="discussionTopic" class="form-label">Topic</label>
-            <input type="text" class="form-control" id="discussionTopic" placeholder="e.g. PostPositions"
-                   name="discussionTopic" required>
-        </div>
-        <div class="mb-3">
-            <label for="discussionQuestion" class="form-label">Question</label>
-            <textarea class="form-control rich-text-editor" id="discussionQuestion" rows="3"
-                      placeholder="e.g. describe the differences between 예 and 에서" name="discussionQuestion"></textarea>
-        </div>
-        <div></div>
-        <button class="btn btn-primary btn-login" type="submit" name="discussion651554661">SAVE</button>
-    </form>
+<form action="/admin_register" method="post">
+    <div class="mb-3">
+        <label for="quizNameChoice" class="form-label">Quiz name</label>
+        <select class="form-select" id="quizNameChoice" name="quizNameChoice" aria-label="Default select example"
+                required>
+            <option selected>Choose Quiz</option>
+            {% for id, quiz_subject in quiz_subjects %}
+            <option value="{{ id }}">{{ quiz_subject }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="question" class="form-label">Question</label>
+        <textarea class="form-control rich-text-editor" rows="3"
+                  placeholder="e.g. describe the differences between 예 and 에서" id="question" name="question" required></textarea>
+    </div>
+    <div class="mb-3">
+        <label for="answerone" class="form-label">Answer one</label>
+        <input type="text" class="form-control" id="answerone" name="answerone" required>
+    </div>
+    <div class="mb-3">
+        <label for="answertwo" class="form-label">Answer two</label>
+        <input type="text" class="form-control" id="answertwo" name="answertwo" required>
+    </div>
+    <div class="mb-3">
+        <label for="answerthree" class="form-label">Answer three</label>
+        <input type="text" class="form-control" id="answerthree" name="answerthree">
+    </div>
+    <div class="mb-3">
+        <label for="answerfour" class="form-label">Answer four</label>
+        <input type="text" class="form-control" id="answerfour" name="answerfour">
+    </div>
+    <div class="mb-3">
+        <label for="correctanswer" class="form-label">Correct answer</label>
+        <input type="text" class="form-control" id="correctanswer" name="correctanswer" required>
+    </div>
+    <button class="btn btn-primary btn-login" type="submit" name="question551531822">SAVE</button>
+</form>
 <hr>
 
-    <h2>Defining New Quiz Subject</h2>
-    <form action="/admin_register" method="post">
-        <div class="mb-3">
-            <label for="quizName" class="form-label">Topic</label>
-            <input type="text" class="form-control" id="quizName" placeholder="e.g. dogs quiz"
-                   name="quizName" required>
-        </div>
-        <div class="mb-3">
-            <label for="quizType" class="form-label">Topic</label>
-            <input type="text" class="form-control" id="quizType" placeholder="e.g. animals"
-                   name="quizName" required>
-        </div>
-        <hr>
-        <button class="btn btn-primary btn-login" type="submit" name="quizname564151154">SAVE</button>
-    </form>
-<hr>
-    <h2>Defining New Quiz Questions</h2>
+<h2>List Translation</h2>
 
-    <form action="/admin_register" method="post">
-        <div class="mb-3">
-            <label for="quizNameChoice" class="form-label">Quiz name</label>
-            <select class="form-select" id="quizNameChoice" name="quizNameChoice" aria-label="Default select example" required>
-                <option selected>Choose Quiz</option>
-                {% for id, quiz_subject in quiz_subjects %}
-                    <option value="{{ id }}">{{ quiz_subject }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="mb-3">
-            <label for="question" class="form-label">Question</label>
-            <input type="text" class="form-control" id="question" name="question" required>
-        </div>
-        <div class="mb-3">
-            <label for="answerone" class="form-label">Answer one</label>
-            <input type="text" class="form-control" id="answerone" name="answerone" required>
-        </div>
-        <div class="mb-3">
-            <label for="answertwo" class="form-label">Answer two</label>
-            <input type="text" class="form-control" id="answertwo" name="answertwo" required>
-        </div>
-        <div class="mb-3">
-            <label for="answerthree" class="form-label">Answer three</label>
-            <input type="text" class="form-control" id="answerthree" name="answerthree">
-        </div>
-        <div class="mb-3">
-            <label for="answerfour" class="form-label">Answer four</label>
-            <input type="text" class="form-control" id="answerfour" name="answerfour">
-        </div>
-        <div class="mb-3">
-            <label for="correctanswer" class="form-label">Correct answer</label>
-            <input type="text" class="form-control" id="correctanswer" name="correctanswer" required>
-        </div>
-        <button class="btn btn-primary btn-login" type="submit" name="question551531822">SAVE</button>
-    </form><hr>
-
-    <h2>List Translation</h2>
-
-    <form action="/admin_register" method="post">
-        <div class="mb-3">
-            <label for="quizNameChoiceThree" class="form-label">Quiz group</label>
-            <select class="form-select" id="quizNameChoiceThree" name="quizNameChoiceThree"
-                    aria-label="Default select example" required>
-                <option selected>Choose Quiz</option>
-                {% for id, quiz_subject in quiz_subjects %}
-                    <option value="{{ id }}" >{{ quiz_subject }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="mb-3">
-            <label for="translation" class="form-label">Korean, English</label>
-            <textarea class="form-control" id="translation" rows="3"
-                      placeholder="e.g. 문, door" name="translationlist" required></textarea>
-            <button class="btn btn-primary btn-login" type="submit" name="translation156151556">SAVE</button>
-        </div>
-    </form>
+<form action="/admin_register" method="post">
+    <div class="mb-3">
+        <label for="quizNameChoiceThree" class="form-label">Quiz group</label>
+        <select class="form-select" id="quizNameChoiceThree" name="quizNameChoiceThree"
+                aria-label="Default select example" required>
+            <option selected>Choose Quiz</option>
+            {% for id, quiz_subject in quiz_subjects %}
+            <option value="{{ id }}">{{ quiz_subject }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="translation" class="form-label">Korean, English</label>
+        <textarea class="form-control" id="translation" rows="3"
+                  placeholder="e.g. 문, door" name="translationlist" required></textarea>
+        <button class="btn btn-primary btn-login" type="submit" name="translation156151556">SAVE</button>
+    </div>
+</form>
 <hr>
 
-    <h2>One Translation</h2>
+<h2>One Translation</h2>
 
-    <form action="/admin_register" method="post">
-        <div class="mb-3">
-            <label for="quizNameChoiceTwo" class="form-label">Quiz group</label>
-            <select class="form-select" id="quizNameChoiceTwo" name="quizNameChoiceTwo"
-                    aria-label="Default select example" required>
-                <option selected>Choose Quiz</option>
-                {% for id, quiz_subject in quiz_subjects %}
-                    <option value="{{ id }}">{{ quiz_subject }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="mb-3">
-            <label for="Korean" class="form-label">Korean</label>
-            <input type="text" class="form-control" id="Korean" name="Korean" required>
-        </div>
-        <div class="mb-3">
-            <label for="English" class="form-label">English </label>
-            <input type="text" class="form-control" id="English" name="English" required>
-        </div>
-        <button class="btn btn-primary btn-login" type="submit" name="translation465198155">SAVE</button>
-    </form>
+<form action="/admin_register" method="post">
+    <div class="mb-3">
+        <label for="quizNameChoiceTwo" class="form-label">Quiz group</label>
+        <select class="form-select" id="quizNameChoiceTwo" name="quizNameChoiceTwo"
+                aria-label="Default select example" required>
+            <option selected>Choose Quiz</option>
+            {% for id, quiz_subject in quiz_subjects %}
+            <option value="{{ id }}">{{ quiz_subject }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="Korean" class="form-label">Korean</label>
+        <input type="text" class="form-control" id="Korean" name="Korean" required>
+    </div>
+    <div class="mb-3">
+        <label for="English" class="form-label">English </label>
+        <input type="text" class="form-control" id="English" name="English" required>
+    </div>
+    <button class="btn btn-primary btn-login" type="submit" name="translation465198155">SAVE</button>
+</form>
 {% endblock %}

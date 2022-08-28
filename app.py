@@ -160,7 +160,7 @@ def quiz(quiz_id):
                 return render_template('quiz_t.html', quiz_id=quiz_id, quiz_questions=quiz_questions)
 
         elif main.get_quiz_type(quiz_id) == 'short_answers':
-            quiz_data = main.get_quiz(quiz_id)
+            quiz_data = main.get_short_quiz(quiz_id)
             number_of_questions = len(quiz_data)
             if request.method == 'POST':
                 quiz_review = {}
@@ -191,7 +191,7 @@ def quiz(quiz_id):
                 return render_template('quiz_sa.html', quiz_id=quiz_id, quiz_questions=quiz_data)
 
         elif main.get_quiz_type(quiz_id) == 'long_answers':
-            quiz_data = main.get_quiz(quiz_id)
+            quiz_data = main.get_long_quiz(quiz_id)
             number_of_questions = len(quiz_data)
             if request.method == 'POST':
                 quiz_review = {}

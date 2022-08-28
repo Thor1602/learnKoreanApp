@@ -1,5 +1,6 @@
 import os
 import random
+from os.path import exists
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from psycopg2 import Error
@@ -16,9 +17,13 @@ class Main:
 
     def execute_query(self, query_list, commit=False, fetchAll=False, fetchOne=False):
         try:
-            # credentials = str(open("database_credentials.txt", 'r').read())
-            DATABASE_URL = os.environ['DATABASE_URL']
-            conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+            if exists('database_credentials.txt'):
+                credentials = str(open("database_credentials.txt", 'r').read())
+                conn = psycopg2.connect(credentials, sslmode='require')
+            else:
+                DATABASE_URL = os.environ['DATABASE_URL']
+                conn = psycopg2.connect(DATABASE_URL, sslmode='require')
+
             c = conn.cursor()
             result = None
             if type(query_list) == str:
@@ -141,12 +146,19 @@ class Main:
             shuffled_dict.update({key: d[key]})
         return shuffled_dict
 
-    def get_quiz(self, quizid):
+    def get_short_quiz(self, quizid):
         questions_with_answer = {}
         for x in self.execute_query(query_list=f"SELECT * from question where quizid = {quizid}",fetchAll=True):
             questions_with_answer[x[2]] = {'correct_answer': x[7], 'possible_answers': [x[3],x[4],x[5],x[6]]}
             random.shuffle(questions_with_answer[x[2]]['possible_answers'])
         questions_with_answer = self.shuffle_dictionary(questions_with_answer)
+        return questions_with_answer
+
+    def get_long_quiz(self, quizid):
+        questions_with_answer = {}
+        for x in self.execute_query(query_list=f"SELECT * from question where quizid = {quizid}",fetchAll=True):
+            questions_with_answer[x[2]] = {'correct_answer': x[7], 'possible_answers': [x[3],x[4],x[5],x[6]]}
+            random.shuffle(questions_with_answer[x[2]]['possible_answers'])
         return questions_with_answer
 
     def get_quiz_to_English(self, quizid):
