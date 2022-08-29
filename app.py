@@ -12,6 +12,7 @@ import re
 from datetime import timedelta
 
 from flask import Flask, render_template, session, redirect, url_for, flash, request, abort
+from flask_ipban import IpBan
 import Database
 from os.path import exists
 
@@ -19,6 +20,8 @@ app = Flask(__name__)
 app.static_folder = 'static'
 main = Database.Main()
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=1)
+ip_ban = IpBan(ban_seconds=60, ban_count=5)
+ip_ban.init_app(app)
 
 if exists('secret_key.txt'):
     app.config['SECRET_KEY'] = open('secret_key.txt', 'r').read()
@@ -270,7 +273,6 @@ def register():
         session.clear()
         return render_template('register.html')
     else:
-        # 6vkNa::6wK4hrpK
         new_user = Database.User(request.form['nickname'], request.form['password'], 'Member',
                                  request.form['first_name'], request.form['last_name'], request.form['email'])
         if new_user.user_exists():
@@ -304,6 +306,7 @@ def login():
             main.update_last_login(main.get_user_id(session['current_user']))
             return redirect(url_for('index'))
         else:
+            ip_ban.add()
             flash("incorrect credentials")
             return redirect(url_for('login'))
 

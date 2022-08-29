@@ -10,9 +10,9 @@
     {% for key in quiz_questions %}
     <div class="col-12">
         {% if some_var|length > 50 %}
-        <h6 class="fw-bold mt-5">{{ key }}</h6>
+        <h6 class="fw-bold mt-5">{{ key | safe }}</h6>
         {% else %}
-        <h4 class="fw-bold mt-5">{{ key }}</h4>
+        <h4 class="fw-bold mt-5">{{ key | safe }}</h4>
         {% endif %}
         <div class="radio-toolbar">
             <div class="row">

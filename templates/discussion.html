@@ -24,7 +24,7 @@
                         </div>
                     </div>
                     <div class="card-body" >
-                        {{ post[0][1] }}
+                        {{ post[0][1] | safe }}
                     </div>
                     <div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
                                                <div class="px-4 pt-3">
@@ -55,7 +55,7 @@
                         </div>
                     </div>
                     <div class="card-body" >
-                        {{ reply[0][1] }}
+                        {{ reply[0][1] | safe }}
                     </div>
                     <div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
                                                <div class="px-4 pt-3">
@@ -86,7 +86,7 @@
                         </div>
                     </div>
                     <div class="card-body" >
-                        {{ subreply[0][1] }}
+                        {{ subreply[0][1] | safe }}
                     </div>
                     <div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-0 pt-0 pb-3">
                                                <div class="px-4 pt-3">

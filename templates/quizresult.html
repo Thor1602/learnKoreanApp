@@ -21,7 +21,7 @@
     {% for review in result [1] %}
     <tr>
         {% for element in review [3:] %}
-        <th>{{ element }}</th>
+        <th>{{ element | safe }}</th>
         {% endfor %}
     </tr>
     {% endfor %}

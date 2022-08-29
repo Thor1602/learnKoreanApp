@@ -3,8 +3,9 @@ import random
 from os.path import exists
 
 from werkzeug.security import generate_password_hash, check_password_hash
-from psycopg2 import Error
+from psycopg2 import Error, sql
 import psycopg2
+
 
 
 class Main:
@@ -13,6 +14,8 @@ class Main:
             - to execute all types of queries
             - read a table in the database
             - delete an entry in a table in the database
+            
+        TODO https://www.psycopg.org/docs/sql.html prevent SQL injection
     """
 
     def execute_query(self, query_list, commit=False, fetchAll=False, fetchOne=False):
@@ -123,7 +126,8 @@ class Main:
         return self.execute_query(query_list="SELECT value from settings where key = 'secret_key'", fetchOne=True)[0]
 
     def get_quiz_subjects(self):
-        return [(x[0], x[1]) for x in self.read_table('quiz')]
+        query_list = self.execute_query(f"SELECT * from quiz ORDER BY id DESC;", fetchAll=True)
+        return [(x[0], x[1]) for x in query_list]
 
     def get_quiz_type(self, id):
         return self.execute_query(query_list=f"SELECT type from quiz where id = '{id}'", fetchAll=True)[0][0]
@@ -148,16 +152,16 @@ class Main:
 
     def get_short_quiz(self, quizid):
         questions_with_answer = {}
-        for x in self.execute_query(query_list=f"SELECT * from question where quizid = {quizid}",fetchAll=True):
-            questions_with_answer[x[2]] = {'correct_answer': x[7], 'possible_answers': [x[3],x[4],x[5],x[6]]}
+        for x in self.execute_query(query_list=f"SELECT * from question where quizid = {quizid}", fetchAll=True):
+            questions_with_answer[x[2]] = {'correct_answer': x[7], 'possible_answers': [x[3], x[4], x[5], x[6]]}
             random.shuffle(questions_with_answer[x[2]]['possible_answers'])
         questions_with_answer = self.shuffle_dictionary(questions_with_answer)
         return questions_with_answer
 
     def get_long_quiz(self, quizid):
         questions_with_answer = {}
-        for x in self.execute_query(query_list=f"SELECT * from question where quizid = {quizid}",fetchAll=True):
-            questions_with_answer[x[2]] = {'correct_answer': x[7], 'possible_answers': [x[3],x[4],x[5],x[6]]}
+        for x in self.execute_query(query_list=f"SELECT * from question where quizid = {quizid}", fetchAll=True):
+            questions_with_answer[x[2]] = {'correct_answer': x[7], 'possible_answers': [x[3], x[4], x[5], x[6]]}
             random.shuffle(questions_with_answer[x[2]]['possible_answers'])
         return questions_with_answer
 
@@ -209,8 +213,8 @@ class Main:
 
     def get_quiz_results(self, userid, gradeid):
         grade = \
-        self.execute_query(query_list=f"SELECT * FROM grades WHERE userid = {userid} ORDER BY date DESC LIMIT 1;",
-                           fetchAll=True)[0]
+            self.execute_query(query_list=f"SELECT * FROM grades WHERE userid = {userid} ORDER BY date DESC LIMIT 1;",
+                               fetchAll=True)[0]
         review = self.execute_query(query_list=f"SELECT * FROM reviews WHERE gradeid = {gradeid}", fetchAll=True)
         return grade, review
 
@@ -218,7 +222,8 @@ class Main:
         return self.execute_query(query_list=f"SELECT * from {table} where id = {id};", fetchAll=True)
 
     def get_discussion_id_structure(self, discussion_id):
-        posts = self.execute_query(query_list=f"SELECT id from post where discussionid = {discussion_id};", fetchAll=True)
+        posts = self.execute_query(query_list=f"SELECT id from post where discussionid = {discussion_id};",
+                                   fetchAll=True)
         routing = {x[0]: None for x in posts}
         post_ids = [x[0] for x in posts]
         for post_id in post_ids:
@@ -226,7 +231,8 @@ class Main:
             routing[post_id] = {x[0]: None for x in replies}
             reply_ids = [x[0] for x in replies]
             for reply_id in reply_ids:
-                subreplies = self.execute_query(query_list=f"SELECT id from subreply where replyid = {reply_id};", fetchAll=True)
+                subreplies = self.execute_query(query_list=f"SELECT id from subreply where replyid = {reply_id};",
+                                                fetchAll=True)
                 routing[post_id][reply_id] = [x[0] for x in subreplies]
         return routing
 
@@ -240,6 +246,7 @@ class Main:
                 for j in d[i][x]:
                     all_queries['subreply'].append(self.get_row_by_id('subreply', j))
         return all_queries
+
 
 class User(Main):
     def __init__(self, nickname, password, role, first_name, last_name, email):
@@ -256,8 +263,8 @@ class User(Main):
             commit=True)
 
     def user_exists(self):
-        return self.execute_query(query_list=f"SELECT exists(select 1 from users where email = '{self.email}')",
-                                  fetchOne=True)[0]
+        return self.execute_query(query_list="SELECT exists(select 1 from users where email ='{in_email}')".format(in_email=self.email),fetchOne=True)[0]
+
 
 
 class UserCourse(Main):

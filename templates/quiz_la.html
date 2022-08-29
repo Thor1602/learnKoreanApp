@@ -8,27 +8,21 @@
 
 <form method="post" action="/quiz{{ quiz_id }}">
     {% for key in quiz_questions %}
-    <div class="row">
-        <div class="col-12">
-            {% if some_var|length > 50 %}
-            <h6 class="fw-bold mt-5">{{ key }}</h6>
-            {% else %}
-            <h4 class="fw-bold mt-5">{{ key }}</h4>
-            {% endif %}
-            <div class="form-check">
-                <div>
-                    {% set outer_loop = loop.index %}
-                    {% for possible_answer in quiz_questions[key]['possible_answers'] %}
-                    <input type="radio" name="{{ outer_loop }}" id="{{ outer_loop }}_{{ loop.index}}">
-                    {% endfor %}
-                    {% for possible_answer in quiz_questions[key]['possible_answers'] %}
-                    <label for="{{ outer_loop }}_{{ loop.index}}" class="box first">
-                        <div class="course"><span class="circle"></span> <span
-                                class="subject"> {{ possible_answer }} </span>
-                        </div>
-                    </label>
-                    {% endfor %}
+    <div class="col-12">
+        {% if some_var|length > 50 %}
+        <h6 class="fw-bold mt-5">{{ key | safe }}</h6>
+        {% else %}
+        <h4 class="fw-bold mt-5">{{ key | safe }}</h4>
+        {% endif %}
+        <div class="radio-toolbar">
+            <div class="row">
+                {% set outer_loop = loop.index %}
+                {% for possible_answer in quiz_questions[key]['possible_answers'] %}
+                <div class="col-md-6">
+                    <input type="radio" name="{{ key }}" id="id_{{ outer_loop }}_{{ loop.index }}" value="{{ possible_answer }}">
+                    <label for="id_{{ outer_loop }}_{{ loop.index }}">{{ possible_answer }}</label>
                 </div>
+                {% endfor %}
             </div>
         </div>
     </div>
